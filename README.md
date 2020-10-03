@@ -24,7 +24,7 @@ To run the app in:
 
 1. A web browser
 
-   - Click in "Run in web browser" in the sidebar of the Expo DevTools window
+   - Click "Run in web browser" in the sidebar of the Expo DevTools window
    - The app will open in another tab
 
 2. On your smartphone
@@ -38,6 +38,14 @@ To run the app in:
    2. iOS
       - Click "Run on iOS simulator"
       - This uses the Simulator app that comes with Xcode
+
+## Publishing
+
+1. Publish publicly
+   1. Click the "Publish" button in the Expo DevTools sidebar or use `expo publish`
+   2. To push updates, just republish
+2. Host via a tunnel
+   1. In the "Connection" section in the sidebar, use the "Tunnel" option
 
 ---
 
