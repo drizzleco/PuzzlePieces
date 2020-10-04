@@ -1,7 +1,5 @@
 # PuzzlePieces
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/d3bece97-bc3e-4431-9b5f-53534685ab58/deploy-status)](https://app.netlify.com/sites/puzzlepieces/deploys)
-
 ## Getting Started
 
 1. Install dependencies(using yarn)
@@ -37,16 +35,13 @@ To run the app in:
       - Click "Run on iOS simulator"
       - This uses the Simulator app that comes with Xcode
 
-## Publish to Production(Netlify)
+## Publish to Production (Render)
 
+### Web
 1. Automatic deploy
    - Push to `main` branch
-2. Manual deploy
-   - `npx expo-optimize`
-   - `expo build:web`
-   - `netlify deploy` to get a site preview(not live)
-   - `netlify deploy --prod` to actually deploy
-   - Use `web-build` for the deployment path
+2. Manual deploy 
+   - Go to [Render dashboard](https://dashboard.render.com/static/srv-btt37uoti7j17qdlschg) and deploy latest commit 
 
 ## Publishing in Development
 
