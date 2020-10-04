@@ -6,6 +6,12 @@ module.exports = {
   globals: {
     navigator: 'off',
   },
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+      modules: true,
+    },
+  },
   rules: {
     'no-unused-vars': 2,
     'import/order': [
