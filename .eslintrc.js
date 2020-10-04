@@ -11,26 +11,7 @@ module.exports = {
     'import/order': [
       0,
       {
-        alphabetize: {
-          order: 'asc',
-        },
-        pathGroups: [
-          {
-            pattern: 'components/**',
-            group: 'internal',
-            position: 'after',
-          },
-          {
-            pattern: 'config',
-            group: 'internal',
-            position: 'after',
-          },
-          {
-            pattern: 'modules/**',
-            group: 'internal',
-            position: 'after',
-          },
-        ],
+        alphabetize: {order: 'asc'},
         pathGroupsExcludedImportTypes: ['builtin'],
         groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
       },
