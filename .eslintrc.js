@@ -1,16 +1,10 @@
 module.exports = {
-  extends: ['prettier', 'prettier/react'],
+  extends: ['airbnb', 'prettier', 'prettier/react'],
   env: {
     browser: true,
   },
   globals: {
     navigator: 'off',
-  },
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-      modules: true,
-    },
   },
   rules: {
     'no-unused-vars': 2,
