@@ -14,14 +14,12 @@ const alertNow = () => {
   alert('clicked!');
 };
 
-const auto = {style: 'auto'};
-
 const App = () => {
   return (
     <View style={styles.container}>
       <Text>Welcome to PuzzlePieces!!</Text>
       <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style={auto} />
+      <StatusBar />
       <Button onPress={alertNow} title='Cool button' color='#841584' />
     </View>
   );
