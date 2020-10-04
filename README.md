@@ -2,17 +2,13 @@
 
 ## Getting Started
 
-1. Install dependencies(using yarn or npm)
+1. Install dependencies(using yarn)
 
    - `yarn install`
 
-     **OR**
-
-   - `npm install`
-
 2. Start Expo
 
-   - `yarn/npm start`
+   - `yarn start`
 
      **OR**
 
