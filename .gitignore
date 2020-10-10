@@ -9,6 +9,7 @@ npm-debug.*
 *.orig.*
 web-build/
 .netlify/
+.vscode/
 
 # macOS
 .DS_Store

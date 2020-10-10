@@ -1,6 +1,13 @@
 import {StatusBar} from 'expo-status-bar';
 import React from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import firebaseConfig from './config/firebase';
+
+firebase.initializeApp(firebaseConfig);
+
+const dbh = firebase.firestore();
 
 const styles = StyleSheet.create({
   container: {
@@ -10,8 +17,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
 const alertNow = () => {
-  alert('clicked!');
+  dbh.collection('characters').doc('peach').set({
+    employment: 'plumber',
+    outfitColor: 'red',
+    specialAttack: 'fireball',
+  });
 };
 
 const App = () => {
