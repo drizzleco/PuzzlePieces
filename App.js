@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
 });
 
 const alertNow = () => {
-  dbh.collection('characters').doc('peach').set({
-    employment: 'plumber',
-    outfitColor: 'red',
+  dbh.collection('characters').doc('luigi').set({
+    employment: 'dude',
+    outfitColor: 'green',
     specialAttack: 'fireball',
   });
 };
