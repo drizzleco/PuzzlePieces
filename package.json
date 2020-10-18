@@ -5,11 +5,16 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "postinstall": "test -f .env || touch .env"
   },
   "dependencies": {
+    "@react-native-firebase/app": "^8.4.5",
+    "@react-native-firebase/firestore": "^7.8.6",
+    "babel-plugin-inline-dotenv": "^1.6.0",
     "expo": "~39.0.2",
     "expo-status-bar": "~1.0.2",
+    "firebase": "^7.23.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",

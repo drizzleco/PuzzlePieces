@@ -6,7 +6,8 @@
 
    - `yarn install`
 
-2. Start Expo
+2. Copy `.env` file to project root
+3. Start Expo
 
    - `yarn start`
 
@@ -38,10 +39,11 @@ To run the app in:
 ## Publish to Production (Render)
 
 ### Web
+
 1. Automatic deploy
    - Push to `main` branch
-2. Manual deploy 
-   - Go to [Render dashboard](https://dashboard.render.com/static/srv-btt37uoti7j17qdlschg) and deploy latest commit 
+2. Manual deploy
+   - Go to [Render dashboard](https://dashboard.render.com/static/srv-btt37uoti7j17qdlschg) and deploy latest commit
 
 ## Publishing in Development
 
