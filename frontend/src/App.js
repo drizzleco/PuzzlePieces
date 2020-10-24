@@ -35,8 +35,9 @@ const Button = styled.button`
 const CanvasContainer = styled.div`
   display: flex;
   flex: 1;
-  justify-content: space-around;
-  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const Space = styled.div`
@@ -52,6 +53,7 @@ const Wrapper = styled.div`
 `;
 
 const ButtonContainer = styled.div`
+  background-color: red;
   align-self: center;
 `;
 const alertNow = () => {
@@ -91,6 +93,7 @@ function App() {
       <Title>Drawma</Title>
       <CanvasContainer>
         <CanvasDraw ref={canvas} brushColor={color} />
+        <Space height={40} />
         <CanvasDraw ref={canvas2} />
       </CanvasContainer>
       <Space height={20} />
