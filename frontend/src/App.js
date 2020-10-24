@@ -2,19 +2,19 @@ import logo from './logo.svg';
 import './App.css';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-//import firebaseConfig from './firebaseConfig.js';
+import firebaseConfig from './firebaseConfig.js';
 
-//firebase.initializeApp(firebaseConfig);
-//
-//const dbh = firebase.firestore();
-//
-//const alertNow = () => {
-//  dbh.collection('characters').doc('luigi').set({
-//    employment: 'dude',
-//    outfitColor: 'green',
-//    specialAttack: 'fireball',
-//  });
-//};
+firebase.initializeApp(firebaseConfig);
+
+const dbh = firebase.firestore();
+
+const alertNow = () => {
+  dbh.collection('characters').doc('luigi').set({
+    employment: 'dude',
+    outfitColor: 'red',
+    specialAttack: 'fireball',
+  });
+};
 
 function App() {
   return (
@@ -24,6 +24,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <button onClick={alertNow}></button>
         <a
           className='App-link'
           href='https://reactjs.org'
