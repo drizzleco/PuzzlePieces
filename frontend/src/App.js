@@ -3,6 +3,7 @@ import './App.css';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import firebaseConfig from './firebaseConfig.js';
+import CanvasDraw from 'react-canvas-draw';
 
 firebase.initializeApp(firebaseConfig);
 
@@ -24,6 +25,7 @@ function App() {
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
+        <CanvasDraw />
         <button onClick={alertNow}></button>
         <a
           className='App-link'
