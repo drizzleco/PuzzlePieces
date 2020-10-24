@@ -56,13 +56,6 @@ const ButtonContainer = styled.div`
   background-color: red;
   align-self: center;
 `;
-const alertNow = () => {
-  dbh.collection('characters').doc('luigi').set({
-    employment: 'dude',
-    outfitColor: 'red',
-    specialAttack: 'fireball',
-  });
-};
 
 function App() {
   const canvas = React.createRef();
@@ -76,7 +69,16 @@ function App() {
   };
 
   const populate = () => {
-    canvas2.current.loadSaveData(drawData, true);
+    dbh
+      .collection('drawings')
+      .doc('canvas')
+      .get()
+      .then((data) => {
+        const drawing = data.data().drawing;
+        if (drawing) {
+          canvas2.current.loadSaveData(drawing, true);
+        }
+      });
   };
 
   const changeColor = () => {
@@ -85,6 +87,12 @@ function App() {
 
   const clearCanvas = () => {
     canvas.current.clear();
+  };
+
+  const saveToFirebase = () => {
+    dbh.collection('drawings').doc('canvas').set({
+      drawing: canvas.current.getSaveData(),
+    });
   };
 
   return (
@@ -100,9 +108,8 @@ function App() {
       <ButtonContainer>
         <Button onClick={changeColor}>change color</Button>
         <Button onClick={clearCanvas}>clear canvas</Button>
-        <Button onClick={alertNow}>send firebase ex</Button>
-        <Button onClick={getSave}>log drawing save</Button>
-        <Button onClick={populate}>populate saved drawing</Button>
+        <Button onClick={saveToFirebase}>send drawing to firebase</Button>
+        <Button onClick={populate}>populate saved drawing from firebase</Button>
       </ButtonContainer>
     </Wrapper>
   );
