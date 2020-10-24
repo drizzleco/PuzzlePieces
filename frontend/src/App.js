@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -18,23 +18,31 @@ const alertNow = () => {
 };
 
 function App() {
+  const canvas = React.createRef();
+  const canvas2 = React.createRef();
+  const [drawData, setDrawData] = React.useState();
+
+  const getSave = () => {
+    const stringObject = canvas.current.getSaveData();
+    setDrawData(stringObject);
+  };
+
+  const populate = () => {
+    canvas2.current.loadSaveData(drawData, true);
+  };
+
   return (
     <div className='App'>
       <header className='App-header'>
-        <img src={logo} className='App-logo' alt='logo' />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <CanvasDraw />
-        <button onClick={alertNow}></button>
-        <a
-          className='App-link'
-          href='https://reactjs.org'
-          target='_blank'
-          rel='noopener noreferrer'
-        >
-          Learn React
-        </a>
+        <h6>Drawma</h6>
+        <div style={{display: 'flex', flexDirection: 'row'}}>
+          <CanvasDraw ref={canvas} />
+          <div style={{minWidth: '100px'}} />
+          <CanvasDraw ref={canvas2} />
+        </div>
+        <button onClick={alertNow}>send firebase ex</button>
+        <button onClick={getSave}>log drawing save</button>
+        <button onClick={populate}>populate saved drawing</button>
       </header>
     </div>
   );
