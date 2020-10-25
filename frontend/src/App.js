@@ -5,8 +5,12 @@ import 'firebase/firestore';
 import firebaseConfig from './firebaseConfig.js';
 import styled from 'styled-components';
 import CanvasDraw from 'react-canvas-draw';
+import {CirclePicker} from 'react-color';
+import useWindowDimensions from './useWindowDimensions.js';
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const dbh = firebase.firestore();
 
@@ -32,27 +36,37 @@ const Button = styled.button`
   }
 `;
 
-const CanvasContainer = styled.div`
+const Container = styled.div`
   display: flex;
+`;
+
+const CanvasContainer = styled(Container)`
   flex: 1;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 `;
 
-const Space = styled.div`
+const Space = styled(Container)`
   width: ${(props) => props.width || 0}px;
   height: ${(props) => props.height || 0}px;
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled(Container)`
   flex: 1;
   height: 100%;
   background-color: azure;
   flex-direction: column;
+  justify-content: center;
 `;
 
-const ButtonContainer = styled.div`
+const PalleteContainer = styled(Container)`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`;
+
+const ButtonContainer = styled(Container)`
   background-color: red;
   align-self: center;
 `;
@@ -62,6 +76,9 @@ function App() {
   const canvas2 = React.createRef();
   const [drawData, setDrawData] = React.useState();
   const [color, setColor] = React.useState();
+  const {width} = useWindowDimensions();
+
+  const canvasScalingFactor = 0.5;
 
   const getSave = () => {
     const stringObject = canvas.current.getSaveData();
@@ -81,8 +98,8 @@ function App() {
       });
   };
 
-  const changeColor = () => {
-    setColor('#' + Math.floor(Math.random() * 16777215).toString(16));
+  const changeColor = (color) => {
+    setColor(color.hex);
   };
 
   const clearCanvas = () => {
@@ -98,15 +115,31 @@ function App() {
   return (
     <Wrapper className='App'>
       <Space height={16} />
+
       <Title>Drawma</Title>
+
       <CanvasContainer>
-        <CanvasDraw ref={canvas} brushColor={color} />
+        <CanvasDraw
+          ref={canvas}
+          brushColor={color}
+          canvasWidth={width * canvasScalingFactor}
+          canvasHeight={width * canvasScalingFactor}
+        />
         <Space height={40} />
-        <CanvasDraw ref={canvas2} />
+        <CanvasDraw
+          ref={canvas2}
+          canvasWidth={width * canvasScalingFactor}
+          canvasHeight={width * canvasScalingFactor}
+          disabled
+          hideInterface
+          hideGrid
+        />
       </CanvasContainer>
+      <PalleteContainer>
+        <CirclePicker onChange={changeColor} />
+      </PalleteContainer>
       <Space height={20} />
       <ButtonContainer>
-        <Button onClick={changeColor}>change color</Button>
         <Button onClick={clearCanvas}>clear canvas</Button>
         <Button onClick={saveToFirebase}>send drawing to firebase</Button>
         <Button onClick={populate}>populate saved drawing from firebase</Button>
