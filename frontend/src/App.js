@@ -60,13 +60,7 @@ const ButtonContainer = styled.div`
 function App() {
   const canvas = React.createRef();
   const canvas2 = React.createRef();
-  const [drawData, setDrawData] = React.useState();
   const [color, setColor] = React.useState();
-
-  const getSave = () => {
-    const stringObject = canvas.current.getSaveData();
-    setDrawData(stringObject);
-  };
 
   const populate = () => {
     dbh
