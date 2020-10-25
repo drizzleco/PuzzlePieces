@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import CanvasDraw from 'react-canvas-draw';
 import {CirclePicker} from 'react-color';
 import useWindowDimensions from './useWindowDimensions.js';
+import {useMediaQuery} from 'react-responsive';
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
@@ -44,7 +45,7 @@ const CanvasContainer = styled(Container)`
   flex: 1;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  flex-direction: ${(props) => (props.isDesktopOrLaptop ? 'row' : 'column')};
 `;
 
 const Space = styled(Container)`
@@ -75,7 +76,10 @@ function App() {
   const canvas = React.createRef();
   const canvas2 = React.createRef();
   const [color, setColor] = React.useState();
-  const {width} = useWindowDimensions();
+  const {width, height} = useWindowDimensions();
+  const sizing = Math.min(width, height);
+  const isDesktopOrLaptop = useMediaQuery({minDeviceWidth: 1224});
+  console.log(isDesktopOrLaptop);
 
   const canvasScalingFactor = 0.5;
 
@@ -112,18 +116,18 @@ function App() {
 
       <Title>Drawma</Title>
 
-      <CanvasContainer>
+      <CanvasContainer isDesktopOrLaptop={isDesktopOrLaptop}>
         <CanvasDraw
           ref={canvas}
           brushColor={color}
-          canvasWidth={width * canvasScalingFactor}
-          canvasHeight={width * canvasScalingFactor}
+          canvasWidth={sizing * canvasScalingFactor}
+          canvasHeight={sizing * canvasScalingFactor}
         />
-        <Space height={40} />
+        {isDesktopOrLaptop ? <Space width={40} /> : <Space height={40} />}
         <CanvasDraw
           ref={canvas2}
-          canvasWidth={width * canvasScalingFactor}
-          canvasHeight={width * canvasScalingFactor}
+          canvasWidth={sizing * canvasScalingFactor}
+          canvasHeight={sizing * canvasScalingFactor}
           disabled
           hideInterface
           hideGrid
