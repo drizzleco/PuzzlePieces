@@ -106,7 +106,6 @@ function App() {
       </CanvasContainer>
       <Space height={20} />
       <ButtonContainer>
-        <Button onClick={changeColor}>change color</Button>
         <Button onClick={clearCanvas}>clear canvas</Button>
         <Button onClick={saveToFirebase}>send drawing to firebase</Button>
         <Button onClick={populate}>populate saved drawing from firebase</Button>
