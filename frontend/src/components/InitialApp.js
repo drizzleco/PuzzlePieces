@@ -71,6 +71,9 @@ const ButtonContainer = styled(Container)`
   align-self: center;
 `;
 
+/*
+ * First Iteration of Drawma idea.
+ */
 const InitialApp = () => {
   const canvas = React.createRef();
   const canvas2 = React.createRef();
