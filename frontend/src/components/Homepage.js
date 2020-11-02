@@ -52,6 +52,18 @@ const PlayButton = styled(Button)`
   width: 30%;
 `;
 
+const AboutButton = styled(Button)`
+  background: transparent;
+  border: 1px solid ${colors.yellow4};
+  color: ${colors.yellow4};
+  font-size: 20px;
+  width: 10%;
+  position: absolute;
+  top: 2%;
+  left: 1%;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+`;
+
 const Homepage = () => {
   const [name, setName] = React.useState('');
   const [color, setColor] = React.useState(colors.gray);
@@ -74,7 +86,7 @@ const Homepage = () => {
   }, []);
 
   const changeName = (name) => {
-    if (color === colors.gray) setColor('#' + Math.floor(Math.random() * 16777215).toString(16));
+    if (color === colors.gray) setColor('   ' + Math.floor(Math.random() * 16777215).toString(16));
     setName(name);
   };
 
@@ -103,6 +115,7 @@ const Homepage = () => {
 
   return (
     <Wrapper>
+      <AboutButton>ABOUT</AboutButton>
       <Row>
         <h1>Logo</h1>
       </Row>
