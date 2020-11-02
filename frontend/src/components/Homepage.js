@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import colors from '../colors';
 import Space from './Space';
 import dbh from '../firebase.js';
-import Cookies from 'universal-cookie';
-
-const cookies = new Cookies();
+import {useCookies} from 'react-cookie';
 
 const NameBubble = styled(Row)`
   border-radius: 50%;
@@ -67,7 +65,8 @@ const AboutButton = styled(Button)`
 const Homepage = () => {
   const [name, setName] = React.useState('');
   const [color, setColor] = React.useState(colors.gray);
-  const playerID = cookies.get('playerID');
+  const [cookies, setCookie] = useCookies(['drawmaPlayerId']);
+  const playerID = cookies.drawmaPlayerId;
 
   React.useEffect(() => {
     if (playerID) {
@@ -86,7 +85,7 @@ const Homepage = () => {
   }, []);
 
   const changeName = (name) => {
-    if (color === colors.gray) setColor('   ' + Math.floor(Math.random() * 16777215).toString(16));
+    if (color === colors.gray) setColor('#' + Math.floor(Math.random() * 16777215).toString(16));
     setName(name);
   };
 
@@ -105,7 +104,7 @@ const Homepage = () => {
         .collection('players')
         .add(data)
         .then((player) => {
-          cookies.set('playerID', player.id, {path: '/'});
+          setCookie('drawmaPlayerId', player.id, {path: '/'});
         })
         .catch((error) => {
           console.log(error);
