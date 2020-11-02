@@ -6,12 +6,6 @@ import {CirclePicker} from 'react-color';
 import useWindowDimensions from '../hooks/useWindowDimensions.js';
 import {useMediaQuery} from 'react-responsive';
 
-// if (!firebase.apps.length) {
-//   firebase.initializeApp(firebaseConfig);
-// }
-
-// const dbh = firebase.firestore();
-
 const Title = styled.h1`
   font-size: 1.5em;
   text-align: center;
