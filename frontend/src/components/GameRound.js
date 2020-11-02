@@ -3,18 +3,11 @@ import {useParams} from '@reach/router';
 import styled from 'styled-components';
 import {HuePicker} from 'react-color';
 import CanvasDraw from 'react-canvas-draw';
+import {Wrapper} from './style';
 import colors from '../colors';
 import Space from './Space';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUndoAlt, faStopwatch} from '@fortawesome/free-solid-svg-icons';
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: space-between;
-  background-color: ${colors.yellow2};
-`;
 
 const Container = styled.div`
   display: flex;

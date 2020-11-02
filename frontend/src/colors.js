@@ -7,6 +7,8 @@ const colors = {
 
   white16: '#FFFFFF',
 
+  gray: '#CBC8C8',
+
   black16: '#000000',
 };
 

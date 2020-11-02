@@ -1,18 +1,16 @@
 import React from 'react';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import firebaseConfig from '../firebaseConfig.js';
+import dbh from '../firebase.js';
 import styled from 'styled-components';
 import CanvasDraw from 'react-canvas-draw';
 import {CirclePicker} from 'react-color';
 import useWindowDimensions from '../hooks/useWindowDimensions.js';
 import {useMediaQuery} from 'react-responsive';
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+// if (!firebase.apps.length) {
+//   firebase.initializeApp(firebaseConfig);
+// }
 
-const dbh = firebase.firestore();
+// const dbh = firebase.firestore();
 
 const Title = styled.h1`
   font-size: 1.5em;

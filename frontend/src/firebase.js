@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 require('dotenv').config();
 
 const firebaseConfig = {
@@ -11,4 +12,8 @@ const firebaseConfig = {
   measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
-export default firebaseConfig;
+firebase.initializeApp(firebaseConfig);
+
+const dbh = firebase.firestore();
+
+export default dbh;
