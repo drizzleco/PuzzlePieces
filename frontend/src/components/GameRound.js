@@ -84,7 +84,6 @@ const DrawingBoard = ({color}) => {
       <Container style={{flex: 3}}>
         <CanvasDraw
           ref={canvas}
-          lazyRadius={0}
           brushColor={color}
           brushRadius={brushRadius}
           canvasHeight={'100%'}
