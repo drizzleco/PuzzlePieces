@@ -62,6 +62,34 @@ const AboutButton = styled(Button)`
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
 
+const changeName = (name, setName, color, setColor) => {
+  if (color === colors.gray) setColor('#' + Math.floor(Math.random() * 16777215).toString(16));
+  setName(name);
+};
+
+const saveUserToFirestore = (name, color, playerID, setCookie) => {
+  if (!name) return;
+  let data = {
+    username: name,
+    color: color,
+  };
+  if (playerID) {
+    // if user object exists, overwrite username
+    dbh.collection('players').doc(playerID).set(data);
+  } else {
+    // save new user to db
+    dbh
+      .collection('players')
+      .add(data)
+      .then((player) => {
+        setCookie('drawmaPlayerId', player.id, {path: '/'});
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+};
+
 const Homepage = () => {
   const [name, setName] = React.useState('');
   const [color, setColor] = React.useState(colors.gray);
@@ -84,34 +112,6 @@ const Homepage = () => {
     }
   }, []);
 
-  const changeName = (name) => {
-    if (color === colors.gray) setColor('#' + Math.floor(Math.random() * 16777215).toString(16));
-    setName(name);
-  };
-
-  const saveUserToFirestore = () => {
-    if (!name) return;
-    let data = {
-      username: name,
-      color: color,
-    };
-    if (playerID) {
-      // if user object exists, overwrite username
-      dbh.collection('players').doc(playerID).set(data);
-    } else {
-      // save new user to db
-      dbh
-        .collection('players')
-        .add(data)
-        .then((player) => {
-          setCookie('drawmaPlayerId', player.id, {path: '/'});
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
-
   return (
     <Wrapper>
       <AboutButton>ABOUT</AboutButton>
@@ -123,7 +123,11 @@ const Homepage = () => {
           <NameInitial>{name[0]}</NameInitial>
         </NameBubble>
         <Space width={17} />
-        <NameInput placeholder={'Name'} value={name} onChange={(e) => changeName(e.target.value)} />
+        <NameInput
+          placeholder={'Name'}
+          value={name}
+          onChange={(e) => changeName(e.target.value, setName, color, setColor)}
+        />
       </Row>
       <ButtonContainer>
         <HowToPlayButton>HOW TO PLAY</HowToPlayButton>
@@ -131,7 +135,9 @@ const Homepage = () => {
         <Row>
           <PlayButton>CREATE GAME</PlayButton>
           <Space width={20} />
-          <PlayButton onClick={saveUserToFirestore}>PLAY</PlayButton>
+          <PlayButton onClick={() => saveUserToFirestore(name, color, playerID, setCookie)}>
+            PLAY
+          </PlayButton>
         </Row>
       </ButtonContainer>
     </Wrapper>
