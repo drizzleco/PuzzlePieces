@@ -1,5 +1,4 @@
 import React from 'react';
-import {useParams} from '@reach/router';
 import styled from 'styled-components';
 import {HuePicker} from 'react-color';
 import CanvasDraw from 'react-canvas-draw';
@@ -85,6 +84,7 @@ const DrawingBoard = ({color}) => {
       <Container style={{flex: 3}}>
         <CanvasDraw
           ref={canvas}
+          lazyRadius={0}
           brushColor={color}
           brushRadius={brushRadius}
           canvasHeight={'100%'}
@@ -165,7 +165,6 @@ const HueContainer = styled.div`
 const SliderPointer = styled.div``;
 
 const GameRound = () => {
-  const params = useParams();
   const [color, setColor] = React.useState();
   return (
     <Wrapper>
