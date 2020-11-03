@@ -110,7 +110,7 @@ const Homepage = () => {
           }
         });
     }
-  }, []);
+  }, [playerID]);
 
   return (
     <Wrapper>

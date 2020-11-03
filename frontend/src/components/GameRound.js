@@ -1,5 +1,4 @@
 import React from 'react';
-import {useParams} from '@reach/router';
 import styled from 'styled-components';
 import {HuePicker} from 'react-color';
 import CanvasDraw from 'react-canvas-draw';
@@ -165,7 +164,6 @@ const HueContainer = styled.div`
 const SliderPointer = styled.div``;
 
 const GameRound = () => {
-  const params = useParams();
   const [color, setColor] = React.useState();
   return (
     <Wrapper>
