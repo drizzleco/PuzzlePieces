@@ -89,6 +89,7 @@ const DrawingBoard = ({color}) => {
           brushRadius={brushRadius}
           canvasHeight={'100%'}
           canvasWidth={'100%'}
+          lazyRadius={0}
           hideGrid
         />
       </Container>
