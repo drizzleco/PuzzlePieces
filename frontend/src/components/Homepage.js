@@ -5,6 +5,8 @@ import colors from '../colors';
 import Space from './Space';
 import dbh from '../firebase.js';
 import {useCookies} from 'react-cookie';
+import {navigate} from '@reach/router';
+import home from '../assets/sounds/home.wav';
 
 const NameBubble = styled(Row)`
   border-radius: 50%;
@@ -90,6 +92,17 @@ const saveUserToFirestore = (name, color, playerID, setCookie) => {
   }
 };
 
+const playGame = (name, color, playerID, cookies, setCookie) => {
+  saveUserToFirestore(name, color, playerID, setCookie);
+  // some logic here to handle find a game, etc
+  // for now, join the 'test' game:
+  dbh.collection('game').doc('test').collection('players').doc(cookies.drawmaPlayerId).set({
+    username: name,
+    color: color,
+  });
+  navigate('/game/test');
+};
+
 const Homepage = () => {
   const [name, setName] = React.useState('');
   const [color, setColor] = React.useState(colors.gray);
@@ -114,6 +127,7 @@ const Homepage = () => {
 
   return (
     <Wrapper>
+      <audio autoPlay loop src={home} />
       <AboutButton>ABOUT</AboutButton>
       <Row>
         <h1>Logo</h1>
@@ -135,7 +149,7 @@ const Homepage = () => {
         <Row>
           <PlayButton>CREATE GAME</PlayButton>
           <Space width={20} />
-          <PlayButton onClick={() => saveUserToFirestore(name, color, playerID, setCookie)}>
+          <PlayButton onClick={() => playGame(name, color, playerID, cookies, setCookie)}>
             PLAY
           </PlayButton>
         </Row>

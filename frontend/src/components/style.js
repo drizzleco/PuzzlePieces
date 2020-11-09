@@ -1,17 +1,27 @@
 import styled from 'styled-components';
 import colors from '../colors';
+import bg from '../assets/bg.svg';
 
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
   justify-content: space-around;
-  background-color: ${colors.yellow2};
+  background-image: url(${bg});
+  background-size: cover;
 `;
 
 export const Row = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -27,4 +37,6 @@ export const Button = styled.button`
   justify-content: center;
   font-family: Sniglet;
   outline: none;
+  border: none;
+  cursor: pointer;
 `;

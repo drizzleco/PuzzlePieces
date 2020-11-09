@@ -7,33 +7,15 @@ import colors from '../colors';
 import Space from './Space';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faUndoAlt, faStopwatch} from '@fortawesome/free-solid-svg-icons';
+import dbh from '../firebase.js';
+import {navigate} from '@reach/router';
+import TopBar from './TopBar';
+import game from '../assets/sounds/game.wav';
+import fivesec from '../assets/sounds/fivesec.wav';
 
 const Container = styled.div`
   display: flex;
 `;
-
-const TopBarDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  background-color: ${colors.yellow4};
-  border-radius: 0px 0px 15px 15px;
-`;
-
-const TopBarTitle = styled.h1`
-  font-family: Sniglet;
-  font-weight: 400;
-  color: ${colors.white16};
-`;
-
-const TopBar = ({text}) => {
-  return (
-    <TopBarDiv>
-      <TopBarTitle>{text}</TopBarTitle>
-    </TopBarDiv>
-  );
-};
 
 const DrawingContainer = styled.div`
   display: flex;
@@ -69,9 +51,9 @@ const SelectorSettings = styled.div`
   align-items: center;
 `;
 
-const DrawingBoard = ({color}) => {
-  const canvas = React.createRef();
+const DrawingBoard = ({color, canvasRef}) => {
   const [brushRadius, setBrushRadius] = React.useState(12);
+  // TODO: figure out how to do height and width
 
   return (
     <DrawingContainer>
@@ -83,11 +65,9 @@ const DrawingBoard = ({color}) => {
       <Space width={40} />
       <Container style={{flex: 3}}>
         <CanvasDraw
-          ref={canvas}
+          ref={canvasRef}
           brushColor={color}
           brushRadius={brushRadius}
-          canvasHeight={'100%'}
-          canvasWidth={'100%'}
           lazyRadius={0}
           hideGrid
         />
@@ -97,7 +77,7 @@ const DrawingBoard = ({color}) => {
         <SizeCircle width={'48px'} onClick={() => setBrushRadius(24)} />
         <SizeCircle width={'24px'} onClick={() => setBrushRadius(12)} />
         <SizeCircle width={'16px'} onClick={() => setBrushRadius(8)} />
-        <FontAwesomeIcon icon={faUndoAlt} onClick={() => canvas.current.undo()} />
+        <FontAwesomeIcon icon={faUndoAlt} onClick={() => canvasRef.current.undo()} />
       </SelectorSettings>
     </DrawingContainer>
   );
@@ -129,9 +109,7 @@ const format = (seconds) => {
   return mins + ':' + (secs < 10 ? '0' + secs : secs);
 };
 
-const Timer = () => {
-  const [seconds, setSeconds] = React.useState(60);
-
+const Timer = ({seconds, setSeconds}) => {
   React.useEffect(() => {
     let interval = null;
     interval = setInterval(() => {
@@ -141,7 +119,7 @@ const Timer = () => {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [seconds]);
+  }, [seconds, setSeconds]);
 
   return (
     <TimerDiv>
@@ -163,13 +141,39 @@ const HueContainer = styled.div`
 
 const SliderPointer = styled.div``;
 
-const GameRound = () => {
+const GameRound = ({gameId}) => {
   const [color, setColor] = React.useState();
+  const [seconds, setSeconds] = React.useState(10);
+  const canvasRef = React.createRef();
+  const fiveSecSound = React.createRef();
+  const bgSound = React.createRef();
+  const gameDoc = dbh.collection('game').doc(gameId);
+
+  React.useEffect(() => {
+    if (seconds === 0) {
+      gameDoc
+        .collection('drawings')
+        .add({
+          drawing: canvasRef.current.getSaveData(),
+        })
+        .then(() => {
+          navigate(`/game/${gameId}/finished`);
+        });
+    }
+    if (seconds === 5) {
+      bgSound.current.volume = 0.1;
+      fiveSecSound.current.volume = 1;
+      fiveSecSound.current.play();
+    }
+  });
+
   return (
     <Wrapper>
+      <audio autoPlay loop ref={bgSound} src={game} />
+      <audio ref={fiveSecSound} src={fivesec} />
       <TopBar text={'ROUND 1'} />
-      <Timer />
-      <DrawingBoard color={color} />
+      <Timer seconds={seconds} setSeconds={setSeconds} />
+      <DrawingBoard canvasRef={canvasRef} color={color} />
       <HueContainer>
         <HuePicker
           color={color}
