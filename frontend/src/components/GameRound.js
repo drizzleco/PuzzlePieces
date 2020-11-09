@@ -143,7 +143,7 @@ const SliderPointer = styled.div``;
 
 const GameRound = ({gameId}) => {
   const [color, setColor] = React.useState();
-  const [seconds, setSeconds] = React.useState(10);
+  const [seconds, setSeconds] = React.useState(60);
   const canvasRef = React.createRef();
   const fiveSecSound = React.createRef();
   const bgSound = React.createRef();
