@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import colors from '../colors';
-import bg from '../assets/bg.svg';
+import bg from '../assets/images/bg.svg';
 
 export const Wrapper = styled.div`
   display: flex;
