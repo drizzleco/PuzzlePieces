@@ -6,7 +6,7 @@ import Space from './Space';
 import dbh from '../firebase.js';
 import {useCookies} from 'react-cookie';
 import {navigate} from '@reach/router';
-import home from '../assets/sounds/home.wav';
+import home from '../assets/sounds/home.mp3';
 
 const NameBubble = styled(Row)`
   border-radius: 50%;
