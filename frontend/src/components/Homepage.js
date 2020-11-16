@@ -1,15 +1,13 @@
 import React from 'react';
-import {Wrapper, Column, Row, Button} from './style';
+import {Wrapper, Column, Row, Button, ErrorMessage} from './style';
 import {TopBarDiv} from './TopBar';
 import styled from 'styled-components';
 import colors from '../colors';
-import Space from './Space';
 import dbh from '../firebase.js';
 import {useCookies} from 'react-cookie';
 import {navigate} from '@reach/router';
 import home from '../assets/sounds/home.mp3';
 import logo from '../assets/images/logo.svg';
-import sound from '../assets/images/sound.svg';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faVolumeMute} from '@fortawesome/free-solid-svg-icons';
 import {faVolumeUp} from '@fortawesome/free-solid-svg-icons';
@@ -130,8 +128,7 @@ const changeName = (name, setName, color, setColor) => {
   setName(name);
 };
 
-const saveUserToFirestore = (name, color, playerID, setCookie) => {
-  if (!name) return;
+const saveUserToFirestore = (name, color, playerID, setPlayerID, setCookie) => {
   let data = {
     username: name,
     color: color,
@@ -146,30 +143,84 @@ const saveUserToFirestore = (name, color, playerID, setCookie) => {
       .add(data)
       .then((player) => {
         setCookie('drawmaPlayerId', player.id, {path: '/'});
+        setPlayerID(player.id);
       })
       .catch((error) => {
         console.log(error);
       });
   }
+  setCookie('drawmaUsername', name, {path: '/'});
+  setCookie('drawmaColor', color, {path: '/'});
 };
 
-const playGame = (name, color, playerID, cookies, setCookie) => {
-  saveUserToFirestore(name, color, playerID, setCookie);
-  // some logic here to handle find a game, etc
-  // for now, join the 'test' game:
-  dbh.collection('game').doc('test').collection('players').doc(cookies.drawmaPlayerId).set({
-    username: name,
-    color: color,
-  });
-  navigate('/game/test');
+const createGame = (
+  name,
+  color,
+  playerID,
+  setPlayerID,
+  cookies,
+  setCookie,
+  nameError,
+  setNameError,
+) => {
+  if (!name) {
+    setNameError(true);
+    return;
+  }
+  saveUserToFirestore(name, color, playerID, setPlayerID, setCookie);
+  navigate('/game/create');
 };
 
-const Homepage = () => {
+const playGame = (
+  name,
+  color,
+  playerID,
+  setPlayerID,
+  cookies,
+  setCookie,
+  setNameError,
+  setGameError,
+  gameId,
+) => {
+  if (!name) {
+    setNameError(true);
+    return;
+  }
+  if (!gameId) {
+    // logic here for handling public game finding
+    return;
+  }
+  saveUserToFirestore(name, color, playerID, setPlayerID, setCookie);
+  dbh
+    .collection('game')
+    .doc(gameId)
+    .get()
+    .then((game) => {
+      if (game.data().state !== 'WAITING') {
+        // game already started
+        setGameError(true);
+      } else {
+        // join game
+        console.log(playerID);
+        dbh.collection('game').doc(gameId).collection('players').doc(playerID).set({
+          username: name,
+          color: color,
+        });
+        // redirect to game page
+        navigate(`/game/${gameId}`);
+      }
+    });
+};
+
+const Homepage = ({location}) => {
   const [name, setName] = React.useState('');
   const [mute, setMute] = React.useState(false);
+  const [nameError, setNameError] = React.useState(false);
+  const [gameError, setGameError] = React.useState(false);
   const [color, setColor] = React.useState(colors.gray);
   const [cookies, setCookie] = useCookies(['drawmaPlayerId']);
-  const playerID = cookies.drawmaPlayerId;
+  const [playerID, setPlayerID] = React.useState(cookies.drawmaPlayerId);
+  const gameId = location.state ? location.state.gameId : false;
 
   React.useEffect(() => {
     if (playerID) {
@@ -207,11 +258,50 @@ const Homepage = () => {
           value={name}
           onChange={(e) => changeName(e.target.value, setName, color, setColor)}
         />
+        {nameError && (
+          <ErrorMessage>you’re not allowed to ghost in, please type your name</ErrorMessage>
+        )}
         <HowToPlayButton>how to play</HowToPlayButton>
-        <PlayButton onClick={() => playGame(name, color, playerID, cookies, setCookie)}>
+        <PlayButton
+          onClick={() =>
+            playGame(
+              name,
+              color,
+              playerID,
+              setPlayerID,
+              cookies,
+              setCookie,
+              setNameError,
+              setGameError,
+              gameId,
+            )
+          }
+        >
           PLAY
         </PlayButton>
-        <CreateGameButton>CREATE GAME</CreateGameButton>
+        {!gameId && (
+          <CreateGameButton
+            onClick={() =>
+              createGame(
+                name,
+                color,
+                playerID,
+                setPlayerID,
+                cookies,
+                setCookie,
+                nameError,
+                setNameError,
+              )
+            }
+          >
+            CREATE GAME
+          </CreateGameButton>
+        )}
+        {gameError && (
+          <ErrorMessage>
+            you’re too fashionably late<br></br>game’s already begun or is no longer valid
+          </ErrorMessage>
+        )}
       </MainColumn>
     </Wrapper>
   );

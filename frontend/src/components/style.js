@@ -40,3 +40,11 @@ export const Button = styled.button`
   border: none;
   cursor: pointer;
 `;
+
+export const ErrorMessage = styled.p`
+  font-family: Sniglet;
+  font-size: 25px;
+  line-height: 31px;
+  text-align: center;
+  color: ${colors.red1};
+`;

@@ -6,7 +6,7 @@ import {Wrapper} from './style';
 import colors from '../colors';
 import Space from './Space';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faUndoAlt, faStopwatch} from '@fortawesome/free-solid-svg-icons';
+import {faUndoAlt, faStopwatch, faEraser} from '@fortawesome/free-solid-svg-icons';
 import dbh from '../firebase.js';
 import {navigate} from '@reach/router';
 import TopBar from './TopBar';
@@ -42,6 +42,7 @@ const SizeCircle = styled.div`
   height: ${(props) => props.width};
   border-radius: 50%;
   background-color: ${colors.black16};
+  cursor: pointer;
 `;
 
 const SelectorSettings = styled.div`
@@ -51,7 +52,11 @@ const SelectorSettings = styled.div`
   align-items: center;
 `;
 
-const DrawingBoard = ({color, canvasRef}) => {
+const IconButton = styled(FontAwesomeIcon)`
+  cursor: pointer;
+`;
+
+const DrawingBoard = ({color, setColor, canvasRef}) => {
   const [brushRadius, setBrushRadius] = React.useState(12);
   // TODO: figure out how to do height and width
 
@@ -74,10 +79,12 @@ const DrawingBoard = ({color, canvasRef}) => {
       </Container>
       <Space width={40} />
       <SelectorSettings>
-        <SizeCircle width={'48px'} onClick={() => setBrushRadius(24)} />
-        <SizeCircle width={'24px'} onClick={() => setBrushRadius(12)} />
+        <SizeCircle width={'40px'} onClick={() => setBrushRadius(20)} />
+        <SizeCircle width={'30px'} onClick={() => setBrushRadius(15)} />
+        <SizeCircle width={'20px'} onClick={() => setBrushRadius(10)} />
         <SizeCircle width={'16px'} onClick={() => setBrushRadius(8)} />
-        <FontAwesomeIcon icon={faUndoAlt} onClick={() => canvasRef.current.undo()} />
+        <IconButton icon={faUndoAlt} onClick={() => canvasRef.current.undo()} />
+        <IconButton icon={faEraser} onClick={() => setColor(colors.white16)} />
       </SelectorSettings>
     </DrawingContainer>
   );
@@ -87,6 +94,7 @@ const TimerDiv = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  margin: 10px;
 `;
 
 const TimerText = styled.h2`
@@ -95,12 +103,18 @@ const TimerText = styled.h2`
   font-weight: 400;
   line-height: 30px;
   letter-spacing: 0em;
+  margin: 0;
+  border-left: 3px solid ${colors.yellow4};
 `;
 
 const TimerBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  background: ${colors.white16};
+  border: 3px solid ${colors.yellow4};
+  box-sizing: border-box;
+  border-radius: 8px;
 `;
 
 const format = (seconds) => {
@@ -124,7 +138,7 @@ const Timer = ({seconds, setSeconds}) => {
   return (
     <TimerDiv>
       <TimerBox>
-        <FontAwesomeIcon icon={faStopwatch} />
+        <FontAwesomeIcon icon={faStopwatch} style={{marginLeft: '10px'}} />
         <Space width={10} />
         <TimerText>{format(seconds)}</TimerText>
       </TimerBox>
@@ -139,15 +153,27 @@ const HueContainer = styled.div`
   align-items: center;
 `;
 
+const ColorPreview = styled.div`
+  height: 25%;
+  width: 50px;
+  background: ${(props) => props.color};
+`;
+
 const SliderPointer = styled.div``;
 
 const GameRound = ({gameId}) => {
-  const [color, setColor] = React.useState();
+  const [color, setColor] = React.useState(colors.black16);
   const [seconds, setSeconds] = React.useState(60);
   const canvasRef = React.createRef();
   const fiveSecSound = React.createRef();
   const bgSound = React.createRef();
   const gameDoc = dbh.collection('game').doc(gameId);
+
+  React.useEffect(() => {
+    gameDoc.get().then((game) => {
+      setSeconds(game.data().timePerRound);
+    });
+  }, [gameId]);
 
   React.useEffect(() => {
     if (seconds === 0) {
@@ -173,8 +199,10 @@ const GameRound = ({gameId}) => {
       <audio ref={fiveSecSound} src={fivesec} />
       <TopBar text={'ROUND 1'} />
       <Timer seconds={seconds} setSeconds={setSeconds} />
-      <DrawingBoard canvasRef={canvasRef} color={color} />
+      <DrawingBoard canvasRef={canvasRef} color={color} setColor={setColor} />
       <HueContainer>
+        <ColorPreview color={color} />
+        <Space width={20} />
         <HuePicker
           color={color}
           pointer={SliderPointer}

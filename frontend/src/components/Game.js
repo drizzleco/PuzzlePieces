@@ -3,21 +3,37 @@ import {navigate, useParams} from '@reach/router';
 import dbh from '../firebase.js';
 import GameRound from './GameRound';
 import WaitingRoom from './WaitingRoom';
+import {useCookies} from 'react-cookie';
 
 const Game = () => {
   const {gameId} = useParams();
   const [game, setGame] = React.useState({state: 'WAITING'});
   const [loading, setLoading] = React.useState(false);
   const gameDoc = dbh.collection('game').doc(gameId);
+  const [cookies, setCookie] = useCookies(['drawmaPlayerId']);
+  const playerID = cookies.drawmaPlayerId;
 
   React.useEffect(() => {
     gameDoc.get().then((doc) => {
       // Load basic doc
       if (!doc.exists) {
+        // game doesn't exist, boot back to homepage
         navigate('/');
       } else {
-        setGame(doc.data());
-        setLoading(true);
+        // player not in game, so show the join screen
+        if (!playerID) navigate('/', {state: {gameId: gameId}});
+        else {
+          gameDoc
+            .collection('players')
+            .doc(playerID)
+            .get()
+            .then((player) => {
+              console.log(player.exists);
+              if (!player.exists) navigate('/', {state: {gameId: gameId}});
+            });
+          setGame(doc.data());
+          setLoading(true);
+        }
       }
     });
   }, [gameId]);
@@ -35,9 +51,6 @@ const Game = () => {
     return () => unsubscribe();
   }, [gameId]);
 
-  if (!loading) {
-    return null;
-  }
   return game.state === 'ROUND' ? (
     <GameRound gameId={gameId} />
   ) : (
