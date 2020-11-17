@@ -1,30 +1,65 @@
 import React from 'react';
-import {Wrapper, Row, Button} from './style';
+import {Wrapper, Column, Row, Button, ErrorMessage} from './style';
+import {TopBarDiv} from './TopBar';
 import styled from 'styled-components';
 import colors from '../colors';
-import Space from './Space';
 import dbh from '../firebase.js';
 import {useCookies} from 'react-cookie';
 import {navigate} from '@reach/router';
 import home from '../assets/sounds/home.mp3';
+import logo from '../assets/images/logo.svg';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faVolumeMute} from '@fortawesome/free-solid-svg-icons';
+import {faVolumeUp} from '@fortawesome/free-solid-svg-icons';
+
+const GetTheAppButton = styled(Button)`
+  border: 3px solid ${colors.purple3};
+  color: ${colors.purple3};
+  background: ${colors.white16};
+  box-sizing: border-box;
+  border-radius: 18px;
+  font-size: 30px;
+  margin: 10px;
+`;
+
+const SoundButton = styled(Button)`
+  cursor: pointer;
+  position: absolute;
+  top: 80px;
+  right: 1%;
+  background: none;
+  font-size: 50px;
+  color: ${colors.black16};
+  box-shadow: none;
+  transition: all 0.1s ease-in-out;
+
+  &:hover {
+    transform: scale(1.3);
+  }
+`;
+
+const Logo = styled.img`
+  height: 30vh;
+  margin-top: -8vh;
+`;
 
 const NameBubble = styled(Row)`
   border-radius: 50%;
-  width: 30vh;
-  height: 30vh;
+  width: 20vh;
+  height: 20vh;
   background-color: ${(props) => props.color};
 `;
 
 const NameInitial = styled.h1`
   font-family: Sniglet;
-  font-size: 70px;
+  font-size: 10vh;
   color: ${colors.white16};
 `;
 
 const NameInput = styled.input`
   background: transparent;
-  width: 20vw;
-  height: 10vh;
+  width: 30%;
+  text-align: center;
   border: 3px solid ${colors.yellow4};
   box-sizing: border-box;
   border-radius: 20px;
@@ -33,21 +68,37 @@ const NameInput = styled.input`
   font-family: Sniglet;
   font-size: 36px;
   padding: 4px 20px;
+  background: ${colors.white16};
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+const MainColumn = styled(Column)`
+  height: 100%;
+  justify-content: space-around;
 `;
 
 const HowToPlayButton = styled(Button)`
   background: ${colors.orange1};
   font-size: 25px;
-  width: 25%;
+  width: 20%;
+  background: ${colors.white16};
+  border: 3px solid ${colors.orange1};
+  box-sizing: border-box;
+  box-shadow: 0px 4px 12px ${colors.orange1};
+  border-radius: 20px;
+  color: ${colors.orange1};
+  position: absolute;
+  bottom: 2%;
+  right: 1%;
 `;
 
 const PlayButton = styled(Button)`
+  background: ${colors.purple3};
+  font-size: 30px;
+  width: 30%;
+`;
+
+const CreateGameButton = styled(PlayButton)`
+  background: ${colors.yellow4};
   font-size: 30px;
   width: 30%;
 `;
@@ -56,21 +107,28 @@ const AboutButton = styled(Button)`
   background: transparent;
   border: 1px solid ${colors.yellow4};
   color: ${colors.yellow4};
-  font-size: 20px;
-  width: 10%;
+  font-size: 25px;
+  width: 12%;
   position: absolute;
-  top: 2%;
+  bottom: 2%;
   left: 1%;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
+
+const mutePage = (mute, setMute) => {
+  // quick way to toggle mute on all audio tags on page
+  setMute(!mute);
+  Array.prototype.slice.call(document.querySelectorAll('audio')).forEach((audio) => {
+    audio.muted = !mute;
+  });
+};
 
 const changeName = (name, setName, color, setColor) => {
   if (color === colors.gray) setColor('#' + Math.floor(Math.random() * 16777215).toString(16));
   setName(name);
 };
 
-const saveUserToFirestore = (name, color, playerID, setCookie) => {
-  if (!name) return;
+const saveUserToFirestore = (name, color, playerID, setPlayerID, setCookie) => {
   let data = {
     username: name,
     color: color,
@@ -85,29 +143,84 @@ const saveUserToFirestore = (name, color, playerID, setCookie) => {
       .add(data)
       .then((player) => {
         setCookie('drawmaPlayerId', player.id, {path: '/'});
+        setPlayerID(player.id);
       })
       .catch((error) => {
         console.log(error);
       });
   }
+  setCookie('drawmaUsername', name, {path: '/'});
+  setCookie('drawmaColor', color, {path: '/'});
 };
 
-const playGame = (name, color, playerID, cookies, setCookie) => {
-  saveUserToFirestore(name, color, playerID, setCookie);
-  // some logic here to handle find a game, etc
-  // for now, join the 'test' game:
-  dbh.collection('game').doc('test').collection('players').doc(cookies.drawmaPlayerId).set({
-    username: name,
-    color: color,
-  });
-  navigate('/game/test');
+const createGame = (
+  name,
+  color,
+  playerID,
+  setPlayerID,
+  cookies,
+  setCookie,
+  nameError,
+  setNameError,
+) => {
+  if (!name) {
+    setNameError(true);
+    return;
+  }
+  saveUserToFirestore(name, color, playerID, setPlayerID, setCookie);
+  navigate('/game/create');
 };
 
-const Homepage = () => {
+const playGame = (
+  name,
+  color,
+  playerID,
+  setPlayerID,
+  cookies,
+  setCookie,
+  setNameError,
+  setGameError,
+  gameId,
+) => {
+  if (!name) {
+    setNameError(true);
+    return;
+  }
+  if (!gameId) {
+    // logic here for handling public game finding
+    return;
+  }
+  saveUserToFirestore(name, color, playerID, setPlayerID, setCookie);
+  dbh
+    .collection('game')
+    .doc(gameId)
+    .get()
+    .then((game) => {
+      if (game.data().state !== 'WAITING') {
+        // game already started
+        setGameError(true);
+      } else {
+        // join game
+        console.log(playerID);
+        dbh.collection('game').doc(gameId).collection('players').doc(playerID).set({
+          username: name,
+          color: color,
+        });
+        // redirect to game page
+        navigate(`/game/${gameId}`);
+      }
+    });
+};
+
+const Homepage = ({location}) => {
   const [name, setName] = React.useState('');
+  const [mute, setMute] = React.useState(false);
+  const [nameError, setNameError] = React.useState(false);
+  const [gameError, setGameError] = React.useState(false);
   const [color, setColor] = React.useState(colors.gray);
   const [cookies, setCookie] = useCookies(['drawmaPlayerId']);
-  const playerID = cookies.drawmaPlayerId;
+  const [playerID, setPlayerID] = React.useState(cookies.drawmaPlayerId);
+  const gameId = location.state ? location.state.gameId : false;
 
   React.useEffect(() => {
     if (playerID) {
@@ -127,33 +240,69 @@ const Homepage = () => {
 
   return (
     <Wrapper>
+      <TopBarDiv style={{justifyContent: 'flex-end'}}>
+        <GetTheAppButton>Get the App</GetTheAppButton>
+      </TopBarDiv>
+      <SoundButton onClick={() => mutePage(mute, setMute)}>
+        <FontAwesomeIcon icon={mute ? faVolumeMute : faVolumeUp} />
+      </SoundButton>
       <audio autoPlay loop src={home} />
-      <AboutButton>ABOUT</AboutButton>
-      <Row>
-        <h1>Logo</h1>
-      </Row>
-      <Row>
-        <NameBubble color={color}>
-          <NameInitial>{name[0]}</NameInitial>
+      <MainColumn>
+        <AboutButton>ABOUT</AboutButton>
+        <Logo src={logo} />
+        <NameBubble color={name ? color : colors.gray}>
+          <NameInitial>{name ? name[0] : 'N'}</NameInitial>
         </NameBubble>
-        <Space width={17} />
         <NameInput
-          placeholder={'Name'}
+          placeholder={'Enter Name'}
           value={name}
           onChange={(e) => changeName(e.target.value, setName, color, setColor)}
         />
-      </Row>
-      <ButtonContainer>
-        <HowToPlayButton>HOW TO PLAY</HowToPlayButton>
-        <Space height={20} />
-        <Row>
-          <PlayButton>CREATE GAME</PlayButton>
-          <Space width={20} />
-          <PlayButton onClick={() => playGame(name, color, playerID, cookies, setCookie)}>
-            PLAY
-          </PlayButton>
-        </Row>
-      </ButtonContainer>
+        {nameError && (
+          <ErrorMessage>you’re not allowed to ghost in, please type your name</ErrorMessage>
+        )}
+        <HowToPlayButton>how to play</HowToPlayButton>
+        <PlayButton
+          onClick={() =>
+            playGame(
+              name,
+              color,
+              playerID,
+              setPlayerID,
+              cookies,
+              setCookie,
+              setNameError,
+              setGameError,
+              gameId,
+            )
+          }
+        >
+          PLAY
+        </PlayButton>
+        {!gameId && (
+          <CreateGameButton
+            onClick={() =>
+              createGame(
+                name,
+                color,
+                playerID,
+                setPlayerID,
+                cookies,
+                setCookie,
+                nameError,
+                setNameError,
+              )
+            }
+          >
+            CREATE GAME
+          </CreateGameButton>
+        )}
+        {gameError && (
+          <ErrorMessage>
+            you’re too fashionably late<br></br>game’s already begun or is no longer valid
+          </ErrorMessage>
+        )}
+      </MainColumn>
     </Wrapper>
   );
 };

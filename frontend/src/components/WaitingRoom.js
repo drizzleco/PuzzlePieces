@@ -1,6 +1,6 @@
 import React from 'react';
 import {TopBarDiv, TopBarTitle} from './TopBar';
-import {Wrapper, Row, Column, Button} from './style';
+import {Wrapper, Row, Column, Button, ErrorMessage} from './style';
 import CanvasDraw from 'react-canvas-draw';
 import styled from 'styled-components';
 import Space from './Space';
@@ -8,6 +8,8 @@ import colors from '../colors';
 import lounge from '../assets/sounds/lounge.wav';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faClone} from '@fortawesome/free-solid-svg-icons';
+import {useCookies} from 'react-cookie';
+import {navigate} from '@reach/router';
 
 const Text = styled.h3`
   font-family: Sniglet;
@@ -15,6 +17,7 @@ const Text = styled.h3`
   font-weight: 400;
   letter-spacing: 0em;
   text-align: left;
+  overflow: scroll;
 `;
 
 const TextDiv = styled.div``;
@@ -99,10 +102,26 @@ const PlayerBubble = styled.div`
   text-align: center;
 `;
 
+const copyLink = () => {
+  const el = document.createElement('textarea');
+  el.value = window.location.href;
+  document.body.appendChild(el);
+  el.select();
+  document.execCommand('copy');
+  document.body.removeChild(el);
+};
+
 const WaitingRoom = ({gameDoc, game}) => {
   const [players, setPlayers] = React.useState([]);
+  const [host, setHost] = React.useState(false);
+  const [gameError, setGameError] = React.useState(false);
+  const [cookies, setCookie] = useCookies(['drawmaPlayerId']);
+  const playerId = cookies.drawmaPlayerId;
 
   React.useEffect(() => {
+    // check if player is the host
+    if (game.host === playerId) setHost(true);
+    else setHost(false);
     // Handles player updates
     const unsubscribe = gameDoc.collection('players').onSnapshot(
       (docs) => {
@@ -117,21 +136,36 @@ const WaitingRoom = ({gameDoc, game}) => {
       },
     );
     return () => unsubscribe();
-  }, [gameDoc]);
+  }, [gameDoc, game]);
+
+  const startGame = () => {
+    gameDoc
+      .collection('players')
+      .get()
+      .then((players) => {
+        if (players.size >= 1) gameDoc.update({state: 'ROUND'});
+        else setGameError(true);
+      });
+  };
+
+  const leaveGame = () => {
+    gameDoc.collection('players').doc(playerId).delete();
+    navigate('/');
+  };
 
   return (
     <Wrapper>
       <audio autoPlay loop src={lounge} />
       <TopBarDiv>
-        <LeaveButton>Leave Game</LeaveButton>
+        <LeaveButton onClick={leaveGame}>Leave Game</LeaveButton>
         <TopBarTitle>Artist Lounge</TopBarTitle>
       </TopBarDiv>
       <Row style={{height: '100%'}}>
         <Column style={{flex: 4}}>
           <ShareBox>
             <ShareText>Share:</ShareText>
-            <Text>Some link text...</Text>
-            <CopyButton>
+            <Text>{window.location.href}</Text>
+            <CopyButton onClick={copyLink}>
               <FontAwesomeIcon icon={faClone} />
             </CopyButton>
           </ShareBox>
@@ -156,7 +190,8 @@ const WaitingRoom = ({gameDoc, game}) => {
             })}
           </Row>
           <Space height={20} />
-          <StartButton onClick={() => gameDoc.update({state: 'ROUND'})}>Start Game</StartButton>
+          {host && <StartButton onClick={startGame}>Start Game</StartButton>}
+          {gameError && <ErrorMessage>you can't play alone stoopid</ErrorMessage>}
         </Column>
         <Column style={{flex: 8}}>
           <Text style={{textDecoration: 'underline'}}>

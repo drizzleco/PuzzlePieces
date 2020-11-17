@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import colors from '../colors';
-import bg from '../assets/bg.svg';
+import bg from '../assets/images/bg.svg';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -39,4 +39,12 @@ export const Button = styled.button`
   outline: none;
   border: none;
   cursor: pointer;
+`;
+
+export const ErrorMessage = styled.p`
+  font-family: Sniglet;
+  font-size: 25px;
+  line-height: 31px;
+  text-align: center;
+  color: ${colors.red1};
 `;
