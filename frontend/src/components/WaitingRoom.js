@@ -143,7 +143,7 @@ const WaitingRoom = ({gameDoc, game}) => {
       .collection('players')
       .get()
       .then((players) => {
-        if (players.size >= 1) gameDoc.update({state: 'ROUND'});
+        if (players.size > 1) gameDoc.update({state: 'ROUND'});
         else setGameError(true);
       });
   };
