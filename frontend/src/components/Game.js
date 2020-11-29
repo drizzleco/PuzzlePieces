@@ -37,7 +37,7 @@ const Game = () => {
         }
       }
     });
-  }, [gameDoc, gameId, playerID]);
+  }, [gameId, playerID]);
 
   React.useEffect(() => {
     // Handles game snapshot updates
@@ -50,7 +50,7 @@ const Game = () => {
       },
     );
     return () => unsubscribe();
-  }, [gameId, gameDoc]);
+  }, [gameId]);
 
   if (loading) {
     return null;

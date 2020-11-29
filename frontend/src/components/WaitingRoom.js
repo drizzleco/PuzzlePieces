@@ -17,7 +17,7 @@ const Text = styled.h3`
   font-size: 20px;
   font-weight: 400;
   letter-spacing: 0em;
-  text-align: left;
+  white-space: nowrap;
   overflow: scroll;
 `;
 
@@ -137,7 +137,7 @@ const WaitingRoom = ({gameDoc, game}) => {
       },
     );
     return () => unsubscribe();
-  }, [gameDoc, game, playerId]);
+  }, [game, playerId]);
 
   const startGame = () => {
     gameDoc

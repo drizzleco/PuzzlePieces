@@ -190,7 +190,7 @@ const GameRound = ({gameId}) => {
     ];
     const imageFile = images[Math.floor(Math.random() * images.length)];
     setImage(cdnUrl + imageFile);
-  }, [gameId, gameDoc]);
+  }, [gameId]);
 
   React.useEffect(() => {
     if (seconds === 0) {
