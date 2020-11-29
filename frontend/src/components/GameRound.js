@@ -10,8 +10,8 @@ import {faUndoAlt, faStopwatch, faEraser} from '@fortawesome/free-solid-svg-icon
 import dbh from '../firebase.js';
 import {navigate} from '@reach/router';
 import TopBar from './TopBar';
-import game from '../assets/sounds/game.wav';
-import fivesec from '../assets/sounds/fivesec.wav';
+import GameSound from '../assets/sounds/game.wav';
+import FiveSecSound from '../assets/sounds/fivesec.wav';
 
 const Container = styled.div`
   display: flex;
@@ -166,8 +166,8 @@ const GameRound = ({gameId}) => {
   const [seconds, setSeconds] = React.useState(60);
   const [image, setImage] = React.useState('');
   const canvasRef = React.createRef();
-  const fiveSecSound = React.createRef();
-  const bgSound = React.createRef();
+  const fiveSecSoundTag = React.createRef();
+  const gameSoundTag = React.createRef();
   const gameDoc = dbh.collection('game').doc(gameId);
 
   React.useEffect(() => {
@@ -190,7 +190,7 @@ const GameRound = ({gameId}) => {
     ];
     const imageFile = images[Math.floor(Math.random() * images.length)];
     setImage(cdnUrl + imageFile);
-  }, [gameId]);
+  }, [gameId, gameDoc]);
 
   React.useEffect(() => {
     if (seconds === 0) {
@@ -204,16 +204,16 @@ const GameRound = ({gameId}) => {
         });
     }
     if (seconds === 5) {
-      bgSound.current.volume = 0.1;
-      fiveSecSound.current.volume = 1;
-      fiveSecSound.current.play();
+      gameSoundTag.current.volume = 0.1;
+      fiveSecSoundTag.current.volume = 1;
+      fiveSecSoundTag.current.play();
     }
   });
 
   return (
     <Wrapper>
-      <audio autoPlay loop ref={bgSound} src={game} />
-      <audio ref={fiveSecSound} src={fivesec} />
+      <audio autoPlay loop ref={gameSoundTag} src={GameSound} />
+      <audio ref={fiveSecSoundTag} src={FiveSecSound} />
       <TopBar text={'ROUND 1'} />
       <Timer seconds={seconds} setSeconds={setSeconds} />
       <DrawingBoard image={image} canvasRef={canvasRef} color={color} setColor={setColor} />

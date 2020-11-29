@@ -84,7 +84,7 @@ const backToHome = () => {
 };
 
 const CreateGame = () => {
-  const [cookies, setCookie] = useCookies(['drawmaPlayerId', 'drawmaUsername', 'drawmaColor']);
+  const [cookies] = useCookies(['drawmaPlayerId', 'drawmaUsername', 'drawmaColor']);
   const [rounds, setRounds] = React.useState(3);
   const [seconds, setSeconds] = React.useState(30);
   const [players, setPlayers] = React.useState(5);

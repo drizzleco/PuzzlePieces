@@ -5,11 +5,12 @@ import CanvasDraw from 'react-canvas-draw';
 import styled from 'styled-components';
 import Space from './Space';
 import colors from '../colors';
-import lounge from '../assets/sounds/lounge.wav';
+import LoungeSound from '../assets/sounds/lounge.wav';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faClone} from '@fortawesome/free-solid-svg-icons';
 import {useCookies} from 'react-cookie';
 import {navigate} from '@reach/router';
+import SoundButton from './SoundButton';
 
 const Text = styled.h3`
   font-family: Sniglet;
@@ -115,7 +116,7 @@ const WaitingRoom = ({gameDoc, game}) => {
   const [players, setPlayers] = React.useState([]);
   const [host, setHost] = React.useState(false);
   const [gameError, setGameError] = React.useState(false);
-  const [cookies, setCookie] = useCookies(['drawmaPlayerId']);
+  const [cookies] = useCookies(['drawmaPlayerId']);
   const playerId = cookies.drawmaPlayerId;
 
   React.useEffect(() => {
@@ -136,7 +137,7 @@ const WaitingRoom = ({gameDoc, game}) => {
       },
     );
     return () => unsubscribe();
-  }, [gameDoc, game]);
+  }, [gameDoc, game, playerId]);
 
   const startGame = () => {
     gameDoc
@@ -155,10 +156,11 @@ const WaitingRoom = ({gameDoc, game}) => {
 
   return (
     <Wrapper>
-      <audio autoPlay loop src={lounge} />
+      <audio autoPlay loop src={LoungeSound} />
       <TopBarDiv>
         <LeaveButton onClick={leaveGame}>Leave Game</LeaveButton>
         <TopBarTitle>Artist Lounge</TopBarTitle>
+        <SoundButton />
       </TopBarDiv>
       <Row style={{height: '100%'}}>
         <Column style={{flex: 4}}>

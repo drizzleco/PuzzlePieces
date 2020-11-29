@@ -6,17 +6,27 @@ import InitialApp from './components/InitialApp';
 import GameRound from './components/GameRound';
 import CreateGame from './components/CreateGame';
 import {Router} from '@reach/router';
+import {MuteContext} from './context/mute-context';
 
 const App = () => {
+  const [muted, setMuted] = React.useState(false);
+  const toggleMuted = () => {
+    console.log('heyy');
+    console.log(muted);
+    setMuted(!muted);
+  };
+  const mutedState = {muted, toggleMuted};
   return (
-    <Router style={{height: '100%'}}>
-      <Homepage path='/' />
-      <InitialApp path='/old' />
-      <CreateGame path='/game/create' />
-      <Game path='/game/:gameId' />
-      <FinishPage path='/game/:gameId/finished' />
-      <GameRound path='/game/round/:roundID' />
-    </Router>
+    <MuteContext.Provider value={mutedState}>
+      <Router style={{height: '100%'}}>
+        <Homepage path='/' />
+        <InitialApp path='/old' />
+        <CreateGame path='/game/create' />
+        <Game path='/game/:gameId' />
+        <FinishPage path='/game/:gameId/finished' />
+        <GameRound path='/game/round/:roundID' />
+      </Router>
+    </MuteContext.Provider>
   );
 };
 

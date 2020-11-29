@@ -10,7 +10,7 @@ const Game = () => {
   const [game, setGame] = React.useState({state: 'WAITING'});
   const [loading, setLoading] = React.useState(true);
   const gameDoc = dbh.collection('game').doc(gameId);
-  const [cookies, setCookie] = useCookies(['drawmaPlayerId']);
+  const [cookies] = useCookies(['drawmaPlayerId']);
   const playerID = cookies.drawmaPlayerId;
 
   React.useEffect(() => {
@@ -37,7 +37,7 @@ const Game = () => {
         }
       }
     });
-  }, [gameId]);
+  }, [gameDoc, gameId, playerID]);
 
   React.useEffect(() => {
     // Handles game snapshot updates
@@ -50,7 +50,7 @@ const Game = () => {
       },
     );
     return () => unsubscribe();
-  }, [gameId]);
+  }, [gameId, gameDoc]);
 
   if (loading) {
     return null;

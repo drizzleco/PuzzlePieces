@@ -6,11 +6,9 @@ import colors from '../colors';
 import dbh from '../firebase.js';
 import {useCookies} from 'react-cookie';
 import {navigate} from '@reach/router';
-import home from '../assets/sounds/home.mp3';
+import HomeSound from '../assets/sounds/home.mp3';
 import logo from '../assets/images/logo.svg';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faVolumeMute} from '@fortawesome/free-solid-svg-icons';
-import {faVolumeUp} from '@fortawesome/free-solid-svg-icons';
+import SoundButton from './SoundButton';
 
 const GetTheAppButton = styled(Button)`
   border: 3px solid ${colors.purple3};
@@ -22,22 +20,6 @@ const GetTheAppButton = styled(Button)`
   margin: 10px;
   &:hover {
     box-shadow: 0px 4px 12px ${colors.purple10};
-  }
-`;
-
-const SoundButton = styled(Button)`
-  cursor: pointer;
-  position: absolute;
-  top: 80px;
-  right: 1%;
-  background: none;
-  font-size: 50px;
-  color: ${colors.black16};
-  box-shadow: none;
-  transition: all 0.1s ease-in-out;
-
-  &:hover {
-    transform: scale(1.3);
   }
 `;
 
@@ -132,14 +114,6 @@ const AboutButton = styled.h1`
   }
 `;
 
-const mutePage = (mute, setMute) => {
-  // quick way to toggle mute on all audio tags on page
-  setMute(!mute);
-  Array.prototype.slice.call(document.querySelectorAll('audio')).forEach((audio) => {
-    audio.muted = !mute;
-  });
-};
-
 const changeName = (name, setName, color, setColor) => {
   if (color === colors.gray) setColor('#' + Math.floor(Math.random() * 16777215).toString(16));
   setName(name);
@@ -231,7 +205,6 @@ const playGame = (
 
 const Homepage = ({location}) => {
   const [name, setName] = React.useState('');
-  const [mute, setMute] = React.useState(false);
   const [nameError, setNameError] = React.useState(false);
   const [gameError, setGameError] = React.useState(false);
   const [color, setColor] = React.useState(colors.gray);
@@ -260,10 +233,8 @@ const Homepage = ({location}) => {
       <TopBarDiv style={{justifyContent: 'flex-end'}}>
         <GetTheAppButton>Get the App</GetTheAppButton>
       </TopBarDiv>
-      <SoundButton onClick={() => mutePage(mute, setMute)}>
-        <FontAwesomeIcon icon={mute ? faVolumeMute : faVolumeUp} />
-      </SoundButton>
-      <audio autoPlay loop src={home} />
+      <SoundButton></SoundButton>
+      <audio autoPlay loop src={HomeSound} />
       <MainColumn>
         <AboutButton>About the creators</AboutButton>
         <Logo src={logo} />
