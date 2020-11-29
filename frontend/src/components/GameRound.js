@@ -41,7 +41,10 @@ const SizeCircle = styled.div`
   width: ${(props) => props.width};
   height: ${(props) => props.width};
   border-radius: 50%;
-  background-color: ${colors.black16};
+  border: 2px solid;
+  background-color: ${(props) => {
+    return props.color || colors.black16;
+  }};
   cursor: pointer;
 `;
 
@@ -220,6 +223,7 @@ const GameRound = ({gameId}) => {
       <HueContainer>
         <ColorPreview color={color} />
         <Space width={20} />
+        <ColorPreview width={'30px'} onClick={() => setColor('#000000')} color={'#000000'} />
         <HuePicker
           color={color}
           pointer={SliderPointer}
