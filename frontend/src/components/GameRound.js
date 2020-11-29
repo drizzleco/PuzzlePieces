@@ -15,17 +15,22 @@ import FiveSecSound from '../assets/sounds/fivesec.wav';
 
 const Container = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const DrawingContainer = styled.div`
   display: flex;
   flex: 4;
   flex-direction: row;
+  justify-content: space-between;
   margin: 0px 40px;
 `;
 
 const Image = styled.img`
+  max-height: 400px;
   width: 100%;
+  object-fit: scale-down;
 `;
 
 const ReferenceImage = ({source}) => {
@@ -71,7 +76,7 @@ const DrawingBoard = ({image, color, setColor, canvasRef}) => {
       <Space width={40} />
       <VerticalBar />
       <Space width={40} />
-      <Container style={{flex: 3}}>
+      <Container style={{flex: 1}}>
         <CanvasDraw
           ref={canvasRef}
           brushColor={color}
