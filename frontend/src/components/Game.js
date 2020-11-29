@@ -8,7 +8,7 @@ import {useCookies} from 'react-cookie';
 const Game = () => {
   const {gameId} = useParams();
   const [game, setGame] = React.useState({state: 'WAITING'});
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const gameDoc = dbh.collection('game').doc(gameId);
   const [cookies, setCookie] = useCookies(['drawmaPlayerId']);
   const playerID = cookies.drawmaPlayerId;
@@ -33,7 +33,7 @@ const Game = () => {
               if (!player.exists) navigate('/', {state: {gameId: gameId}});
             });
           setGame(doc.data());
-          setLoading(true);
+          setLoading(false);
         }
       }
     });
@@ -52,11 +52,15 @@ const Game = () => {
     return () => unsubscribe();
   }, [gameId]);
 
-  return game.state === 'ROUND' ? (
-    <GameRound gameId={gameId} />
-  ) : (
-    <WaitingRoom gameDoc={gameDoc} game={game} />
-  );
+  if (loading) {
+    return null;
+  } else {
+    return game.state === 'ROUND' ? (
+      <GameRound gameId={gameId} />
+    ) : (
+      <WaitingRoom gameDoc={gameDoc} game={game} />
+    );
+  }
 };
 
 export default Game;
