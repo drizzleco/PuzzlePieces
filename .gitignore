@@ -10,7 +10,9 @@ npm-debug.*
 web-build/
 .netlify/
 .vscode/
-.env 
+.env
+cdn/
+.firebase/ 
 
 # macOS
 .DS_Store

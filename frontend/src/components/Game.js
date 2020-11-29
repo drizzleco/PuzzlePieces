@@ -19,6 +19,7 @@ const Game = () => {
       if (!doc.exists) {
         // game doesn't exist, boot back to homepage
         navigate('/');
+        return;
       } else {
         // player not in game, so show the join screen
         if (!playerID) navigate('/', {state: {gameId: gameId}});

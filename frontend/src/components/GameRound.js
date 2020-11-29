@@ -56,14 +56,14 @@ const IconButton = styled(FontAwesomeIcon)`
   cursor: pointer;
 `;
 
-const DrawingBoard = ({color, setColor, canvasRef}) => {
+const DrawingBoard = ({image, color, setColor, canvasRef}) => {
   const [brushRadius, setBrushRadius] = React.useState(12);
   // TODO: figure out how to do height and width
 
   return (
     <DrawingContainer>
       <Container style={{flex: 1}}>
-        <ReferenceImage source={'https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg'} />
+        <ReferenceImage source={image} />
       </Container>
       <Space width={40} />
       <VerticalBar />
@@ -164,6 +164,7 @@ const SliderPointer = styled.div``;
 const GameRound = ({gameId}) => {
   const [color, setColor] = React.useState(colors.black16);
   const [seconds, setSeconds] = React.useState(60);
+  const [image, setImage] = React.useState('');
   const canvasRef = React.createRef();
   const fiveSecSound = React.createRef();
   const bgSound = React.createRef();
@@ -173,6 +174,22 @@ const GameRound = ({gameId}) => {
     gameDoc.get().then((game) => {
       setSeconds(game.data().timePerRound);
     });
+    // whole images would be stored in cdn
+    // we'd want to get the split images from flask backend that has
+    // our image splitting algo
+    // this just a proof of concept for now
+    const cdnUrl = 'https://puzzlepieces-25386.web.app/';
+    const images = [
+      'airplane.png',
+      'arctichare.png',
+      'baboon.png',
+      'boat.png',
+      'cat.png',
+      'peppers.png',
+      'pool.png',
+    ];
+    const imageFile = images[Math.floor(Math.random() * images.length)];
+    setImage(cdnUrl + imageFile);
   }, [gameId]);
 
   React.useEffect(() => {
@@ -199,7 +216,7 @@ const GameRound = ({gameId}) => {
       <audio ref={fiveSecSound} src={fivesec} />
       <TopBar text={'ROUND 1'} />
       <Timer seconds={seconds} setSeconds={setSeconds} />
-      <DrawingBoard canvasRef={canvasRef} color={color} setColor={setColor} />
+      <DrawingBoard image={image} canvasRef={canvasRef} color={color} setColor={setColor} />
       <HueContainer>
         <ColorPreview color={color} />
         <Space width={20} />

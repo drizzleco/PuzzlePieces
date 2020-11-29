@@ -20,6 +20,9 @@ const GetTheAppButton = styled(Button)`
   border-radius: 18px;
   font-size: 30px;
   margin: 10px;
+  &:hover {
+    box-shadow: 0px 4px 12px ${colors.purple10};
+  }
 `;
 
 const SoundButton = styled(Button)`
@@ -89,30 +92,44 @@ const HowToPlayButton = styled(Button)`
   position: absolute;
   bottom: 2%;
   right: 1%;
+  &:hover {
+    background: ${colors.orange1};
+    border: 3px solid ${colors.white16};
+    color: ${colors.white16};
+  }
 `;
 
 const PlayButton = styled(Button)`
   background: ${colors.purple3};
   font-size: 30px;
   width: 30%;
+  &:hover {
+    background: ${colors.purple10};
+  }
 `;
 
 const CreateGameButton = styled(PlayButton)`
   background: ${colors.yellow4};
   font-size: 30px;
   width: 30%;
+  &:hover {
+    background: ${colors.orange1};
+  }
 `;
 
-const AboutButton = styled(Button)`
-  background: transparent;
-  border: 1px solid ${colors.yellow4};
+const AboutButton = styled.h1`
   color: ${colors.yellow4};
+  font-family: Sniglet;
   font-size: 25px;
-  width: 12%;
+  font-weight: 400;
   position: absolute;
   bottom: 2%;
   left: 1%;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  text-decoration-line: underline;
+  cursor: pointer;
+  &:hover {
+    color: ${colors.purple3};
+  }
 `;
 
 const mutePage = (mute, setMute) => {
@@ -248,7 +265,7 @@ const Homepage = ({location}) => {
       </SoundButton>
       <audio autoPlay loop src={home} />
       <MainColumn>
-        <AboutButton>ABOUT</AboutButton>
+        <AboutButton>About the creators</AboutButton>
         <Logo src={logo} />
         <NameBubble color={name ? color : colors.gray}>
           <NameInitial>{name ? name[0] : 'N'}</NameInitial>
