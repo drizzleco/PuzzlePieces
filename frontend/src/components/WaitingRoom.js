@@ -19,6 +19,7 @@ const Text = styled.h3`
   letter-spacing: 0em;
   white-space: nowrap;
   overflow: scroll;
+  color: ${colors.brown1};
 `;
 
 const TextDiv = styled.div``;
@@ -47,10 +48,11 @@ const LeaveButton = styled(Button)`
 `;
 
 const ShareBox = styled.div`
-  width: 60%;
+  width: 80%;
   height: 40px;
   border: 1px solid ${colors.orange1};
   border-radius: 6px;
+  background-color: ${colors.white16};
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -77,6 +79,7 @@ const ShareText = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   padding: 10px;
   border-radius: 6px 0px 0px 6px;
 `;
@@ -85,8 +88,8 @@ const PlayerBubble = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   left: 64.93px;
   top: 272.99px;
   border-radius: 50%;
@@ -101,6 +104,13 @@ const PlayerBubble = styled.div`
   line-height: 10px;
   letter-spacing: 0em;
   text-align: center;
+`;
+
+const ArtistTitle = styled.h1`
+  font-family: Sniglet;
+  font-size: 50px;
+  font-weight: 400;
+  color: ${colors.brown1};
 `;
 
 const copyLink = () => {
@@ -162,10 +172,11 @@ const WaitingRoom = ({gameDoc, game}) => {
         <TopBarTitle>Artist Lounge</TopBarTitle>
         <SoundButton />
       </TopBarDiv>
-      <Row style={{height: '100%'}}>
+      <Row style={{height: '100%', justifyContent: 'space-around'}}>
         <Column style={{flex: 4}}>
+          <ArtistTitle>Artist Lounge</ArtistTitle>
           <ShareBox>
-            <ShareText>Share:</ShareText>
+            <ShareText>Share This Link</ShareText>
             <Text>{window.location.href}</Text>
             <CopyButton onClick={copyLink}>
               <FontAwesomeIcon icon={faClone} />
@@ -179,6 +190,7 @@ const WaitingRoom = ({gameDoc, game}) => {
               Players: {players.length}/{game.maxPlayers}
             </Text>
           </TextDiv>
+          <Text style={{textDecoration: 'underline'}}>Players</Text>
           <Row>
             {players.map((player) => {
               return (
@@ -196,10 +208,10 @@ const WaitingRoom = ({gameDoc, game}) => {
           {gameError && <ErrorMessage>you can't play alone stoopid</ErrorMessage>}
         </Column>
         <Column style={{flex: 8}}>
-          <Text style={{textDecoration: 'underline'}}>
-            Get your creative juice flowing while you wait
+          <Text style={{color: '#5C0000'}}>
+            Artists, do your thing (in the space below) while you wait
           </Text>
-          <CanvasDraw hideGrid lazyRadius={0} canvasWidth={800} />
+          <CanvasDraw hideGrid lazyRadius={0} canvasWidth={800} canvasHeight={500} />
         </Column>
       </Row>
     </Wrapper>

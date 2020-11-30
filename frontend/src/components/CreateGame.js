@@ -116,6 +116,9 @@ const CreateGame = () => {
   return (
     <Wrapper>
       <TopBar text={'Settings'} />
+      <Row>
+        <Label style={{textAlign: 'center'}}>Customize your drawma below</Label>
+      </Row>
       <Row style={{flex: 3}}>
         <LabelColumn>
           <Label>Rounds</Label>

@@ -12,6 +12,7 @@ import {navigate} from '@reach/router';
 import TopBar from './TopBar';
 import GameSound from '../assets/sounds/game.wav';
 import FiveSecSound from '../assets/sounds/fivesec.wav';
+import SoundButton from './SoundButton';
 
 const Container = styled.div`
   display: flex;
@@ -39,7 +40,7 @@ const ReferenceImage = ({source}) => {
 
 const VerticalBar = styled.div`
   border-left: 1px solid #000;
-  height: 100%;
+  height: 100%sal;
 `;
 
 const SizeCircle = styled.div`
@@ -163,7 +164,7 @@ const HueContainer = styled.div`
 
 const ColorPreview = styled.div`
   height: 25%;
-  width: 50px;
+  width: ${(props) => (props.width ? props.width : '50px')};
   background: ${(props) => props.color};
 `;
 
@@ -223,12 +224,14 @@ const GameRound = ({gameId}) => {
       <audio autoPlay loop ref={gameSoundTag} src={GameSound} />
       <audio ref={fiveSecSoundTag} src={FiveSecSound} />
       <TopBar text={'ROUND 1'} />
+      <SoundButton />
       <Timer seconds={seconds} setSeconds={setSeconds} />
       <DrawingBoard image={image} canvasRef={canvasRef} color={color} setColor={setColor} />
       <HueContainer>
         <ColorPreview color={color} />
         <Space width={20} />
-        <ColorPreview width={'30px'} onClick={() => setColor('#000000')} color={'#000000'} />
+        <ColorPreview width={'20px'} onClick={() => setColor('#000000')} color={'#000000'} />
+        <ColorPreview width={'20px'} onClick={() => setColor('#FFFFFF')} color={'#FFFFFF'} />
         <HuePicker
           color={color}
           pointer={SliderPointer}
