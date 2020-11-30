@@ -14,7 +14,7 @@ export const TopBarDiv = styled.div`
 export const TopBarTitle = styled.h1`
   font-family: Sniglet;
   font-weight: 400;
-  color: ${colors.white16};
+  color: ${(props) => (props.color ? props.color : colors.white16)};
 `;
 
 const TopBar = ({text}) => {

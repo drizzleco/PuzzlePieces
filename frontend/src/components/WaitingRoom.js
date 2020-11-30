@@ -113,6 +113,10 @@ const ArtistTitle = styled.h1`
   color: ${colors.brown1};
 `;
 
+const HostUsername = styled.span`
+  color: ${colors.red1};
+`;
+
 const copyLink = () => {
   const el = document.createElement('textarea');
   el.value = window.location.href;
@@ -125,6 +129,7 @@ const copyLink = () => {
 const WaitingRoom = ({gameDoc, game}) => {
   const [players, setPlayers] = React.useState([]);
   const [host, setHost] = React.useState(false);
+  const [hostUsername, setHostUsername] = React.useState('');
   const [gameError, setGameError] = React.useState(false);
   const [cookies] = useCookies(['drawmaPlayerId']);
   const playerId = cookies.drawmaPlayerId;
@@ -133,6 +138,14 @@ const WaitingRoom = ({gameDoc, game}) => {
     // check if player is the host
     if (game.host === playerId) setHost(true);
     else setHost(false);
+    // set host username
+    gameDoc
+      .collection('players')
+      .doc(game.host)
+      .get()
+      .then((player) => {
+        setHostUsername(player.data().username);
+      });
     // Handles player updates
     const unsubscribe = gameDoc.collection('players').onSnapshot(
       (docs) => {
@@ -169,7 +182,9 @@ const WaitingRoom = ({gameDoc, game}) => {
       <audio autoPlay loop src={LoungeSound} />
       <TopBarDiv>
         <LeaveButton onClick={leaveGame}>Leave Game</LeaveButton>
-        <TopBarTitle>Artist Lounge</TopBarTitle>
+        <TopBarTitle color={colors.brown1}>
+          Waiting for <HostUsername>{hostUsername}</HostUsername> to start game...
+        </TopBarTitle>
         <SoundButton />
       </TopBarDiv>
       <Row style={{height: '100%', justifyContent: 'space-around'}}>
