@@ -5,14 +5,13 @@ import FinishPage from './components/FinishPage';
 import InitialApp from './components/InitialApp';
 import GameRound from './components/GameRound';
 import CreateGame from './components/CreateGame';
+import LeaderBoard from './components/LeaderBoard';
 import {Router} from '@reach/router';
 import {MuteContext} from './context/mute-context';
 
 const App = () => {
   const [muted, setMuted] = React.useState(false);
   const toggleMuted = () => {
-    console.log('heyy');
-    console.log(muted);
     setMuted(!muted);
   };
   const mutedState = {muted, toggleMuted};
@@ -25,6 +24,7 @@ const App = () => {
         <Game path='/game/:gameId' />
         <FinishPage path='/game/:gameId/finished' />
         <GameRound path='/game/round/:roundID' />
+        <LeaderBoard path='/game/round/:gameId/leaderboard' />
       </Router>
     </MuteContext.Provider>
   );

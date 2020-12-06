@@ -7,7 +7,7 @@ export const TopBarDiv = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  background-color: ${colors.yellow4};
+  background-color: ${(props) => (props.color ? props.color : colors.yellow4)};
   border-radius: 0px 0px 15px 15px;
 `;
 
@@ -17,9 +17,9 @@ export const TopBarTitle = styled.h1`
   color: ${(props) => (props.color ? props.color : colors.white16)};
 `;
 
-const TopBar = ({text}) => {
+const TopBar = ({text, color}) => {
   return (
-    <TopBarDiv>
+    <TopBarDiv color={color}>
       <TopBarTitle>{text}</TopBarTitle>
     </TopBarDiv>
   );
