@@ -174,6 +174,18 @@ const WaitingRoom = ({gameDoc, game}) => {
 
   const leaveGame = () => {
     gameDoc.collection('players').doc(playerId).delete();
+    gameDoc
+      .collection('players')
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          const newHost = querySnapshot.docs[0].id;
+          gameDoc.update({host: newHost});
+        } else {
+          // no other players, delete game
+          gameDoc.delete();
+        }
+      });
     navigate('/');
   };
 
