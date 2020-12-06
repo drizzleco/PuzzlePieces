@@ -24,7 +24,7 @@ const App = () => {
         <Game path='/game/:gameId' />
         <FinishPage path='/game/:gameId/finished' />
         <GameRound path='/game/round/:roundID' />
-        <LeaderBoard path='/game/round/:gameId/leaderboard' />
+        <LeaderBoard path='/game/:gameId/leaderboard' />
       </Router>
     </MuteContext.Provider>
   );
