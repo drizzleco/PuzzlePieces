@@ -1,11 +1,13 @@
 import React from 'react';
-import {Button, Wrapper} from './style';
+import {Button, Row, Wrapper} from './style';
 import dbh from '../firebase.js';
-import TopBar from './TopBar';
+import TopBar, {TopBarDiv} from './TopBar';
 import colors from '../colors';
 import styled from 'styled-components';
 import {navigate} from '@reach/router';
 import Space from './Space';
+import logo from '../assets/images/logo.svg';
+import SoundButton from './SoundButton';
 
 const MainContent = styled.div`
   display: flex;
@@ -13,10 +15,24 @@ const MainContent = styled.div`
   justify-content: space-around;
 `;
 
-const ImageContent = styled.div``;
+const Logo = styled.img`
+  height: 80px;
+  background: radial-gradient(50% 50% at 50% 50%, #ffffff 16.52%, rgba(255, 255, 255, 0) 100%);
+`;
 
-const LeaderBoardContent = styled.div``;
-const LeaderBoardUsersContent = styled.div``;
+const FinalImage = styled.img`
+  width: 50%;
+`;
+
+const LeaderBoardContent = styled.div`
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const LeaderBoardUsersContent = styled.div`
+  width: 30%;
+`;
 
 const LeaderBoardWrapper = styled.div`
   display: flex;
@@ -33,7 +49,7 @@ const LeaderBoardTitle = styled.h2`
   text-align: center;
   background: ${colors.purple3};
   margin: 0;
-  padding: 5px 10px;
+  padding: 5px 30px;
 `;
 
 const LeaderBoardRow = styled.div`
@@ -53,6 +69,9 @@ const LeaderBoardText = styled.h1`
 `;
 
 const ContentButton = styled(Button)`
+  width: 30%;
+  height: 40px;
+  font-size: 24px;
   background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : colors.yellow4)};
 `;
 
@@ -86,8 +105,10 @@ const LeaderBoard = ({gameId}) => {
 
   return (
     <Wrapper>
-      <TopBar text={'Drawma'} color={colors.orange1} />
-      <MainContent>
+      <TopBar color={colors.orange1}>
+        <Logo src={logo}></Logo>
+      </TopBar>
+      <Row>
         <LeaderBoardContent>
           <LeaderBoardWrapper>
             <LeaderBoardTitle>Leaderboard</LeaderBoardTitle>
@@ -97,12 +118,17 @@ const LeaderBoard = ({gameId}) => {
               })}
             </LeaderBoardUsersContent>
           </LeaderBoardWrapper>
-          <ContentButton onClick={() => navigate('/')}>Go Home</ContentButton>
         </LeaderBoardContent>
-        <ImageContent>
-          <ContentButton backgroundColor={colors.orange1}>Play Again</ContentButton>
-        </ImageContent>
-      </MainContent>
+        <Space width={40} />
+        <LeaderBoardContent>
+          <FinalImage src={'https://puzzlepieces-25386.web.app/airplane.png'}></FinalImage>
+        </LeaderBoardContent>
+      </Row>
+      <Row>
+        <ContentButton onClick={() => navigate('/')}>Go Home</ContentButton>
+        <Space width={40} />
+        <ContentButton backgroundColor={colors.orange1}>Play Again</ContentButton>
+      </Row>
       <Space height={10} />
     </Wrapper>
   );

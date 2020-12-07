@@ -8,10 +8,9 @@ import {Button} from './style';
 import colors from '../colors';
 
 const ButtonWrapper = styled(Button)`
+  /* position: absolute;
+  right: 1%; */
   cursor: pointer;
-  position: absolute;
-  top: 80px;
-  right: 1%;
   background: none;
   font-size: 50px;
   color: ${colors.black16};

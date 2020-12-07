@@ -5,7 +5,7 @@ import FinishPage from './components/FinishPage';
 import InitialApp from './components/InitialApp';
 import GameRound from './components/GameRound';
 import CreateGame from './components/CreateGame';
-import LeaderBoard from './components/LeaderBoard';
+import LeaderBoard from './components/Leaderboard';
 import {Router} from '@reach/router';
 import {MuteContext} from './context/mute-context';
 

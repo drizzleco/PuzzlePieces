@@ -232,8 +232,8 @@ const Homepage = ({location}) => {
     <Wrapper>
       <TopBarDiv style={{justifyContent: 'flex-end'}}>
         <GetTheAppButton>Get the App</GetTheAppButton>
+        <SoundButton />
       </TopBarDiv>
-      <SoundButton></SoundButton>
       <audio autoPlay loop src={HomeSound} />
       <MainColumn>
         <AboutButton>About the creators</AboutButton>
