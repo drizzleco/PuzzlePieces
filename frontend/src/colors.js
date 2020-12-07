@@ -8,6 +8,8 @@ const colors = {
   purple3: '#875DA9',
   purple10: '#6C4B87',
 
+  peach: '#FAAB93',
+
   white16: '#FFFFFF',
 
   gray: '#CBC8C8',

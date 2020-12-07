@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import {navigate} from '@reach/router';
 import Space from './Space';
 import logo from '../assets/images/logo.svg';
-import SoundButton from './SoundButton';
+import _ from 'lodash';
 
 const MainContent = styled.div`
   display: flex;
@@ -30,9 +30,7 @@ const LeaderBoardContent = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const LeaderBoardUsersContent = styled.div`
-  width: 30%;
-`;
+const LeaderBoardUsersContent = styled.div``;
 
 const LeaderBoardWrapper = styled.div`
   display: flex;
@@ -50,9 +48,11 @@ const LeaderBoardTitle = styled.h2`
   background: ${colors.purple3};
   margin: 0;
   padding: 5px 30px;
+  border-radius: 3px;
 `;
 
 const LeaderBoardRow = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -65,7 +65,6 @@ const LeaderBoardText = styled.h1`
   font-weight: 400;
   line-height: 17px;
   letter-spacing: 0em;
-  text-align: center;
 `;
 
 const ContentButton = styled(Button)`
@@ -91,17 +90,29 @@ const LeaderBoard = ({gameId}) => {
   const [playerScores, setPlayerScores] = React.useState([]);
 
   React.useEffect(() => {
-    gameDoc
-      .collection('players')
-      .get()
-      .then((data) => {
-        let values = [];
-        data.forEach((doc) => {
-          values.push(doc.data().score);
-        });
-        setPlayerScores(values);
-      });
-  });
+    // TODO(herrick + philip) : Figure out how to make this work
+    // Idea 1:
+    // Loop through all scores and re-calculate scores. Add playerId to
+    // drawing object then, map total score from drawing to player's name and score.
+    // Idea 2:
+    // We need an object of the scores. On drawing, pull the score.
+    // Need a flag to say when everyone is done.
+    //gameDoc
+    //  .collection('drawings')
+    //  .get()
+    //  .then((drawings) => {
+    //    drawings.docs.map((drawing) => {
+    //      let scores = [];
+    //      drawing
+    //        .collection('scores')
+    //        .get()
+    //        .then((score) => {
+    //          score.push(score);
+    //        });
+    //      const drawingScore = _.sum(_.values(_.merge(scores)));
+    //    });
+    //  });
+  }, []);
 
   return (
     <Wrapper>
@@ -126,8 +137,6 @@ const LeaderBoard = ({gameId}) => {
       </Row>
       <Row>
         <ContentButton onClick={() => navigate('/')}>Go Home</ContentButton>
-        <Space width={40} />
-        <ContentButton backgroundColor={colors.orange1}>Play Again</ContentButton>
       </Row>
       <Space height={10} />
     </Wrapper>

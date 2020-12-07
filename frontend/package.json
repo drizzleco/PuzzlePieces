@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^12.1.10",
     "babel-plugin-inline-dotenv": "^1.6.0",
     "firebase": "^7.24.0",
+    "lodash": "^4.17.20",
     "prettier": "^2.1.2",
     "react": "^17.0.1",
     "react-canvas-draw": "^1.1.1",
