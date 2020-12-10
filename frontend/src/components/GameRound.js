@@ -13,6 +13,7 @@ import TopBar from './TopBar';
 import GameSound from '../assets/sounds/game.wav';
 import FiveSecSound from '../assets/sounds/fivesec.wav';
 import SoundButton from './SoundButton';
+import {useCookies} from 'react-cookie';
 
 const Container = styled.div`
   display: flex;
@@ -178,6 +179,8 @@ const GameRound = ({gameId}) => {
   const fiveSecSoundTag = React.createRef();
   const gameSoundTag = React.createRef();
   const gameDoc = dbh.collection('game').doc(gameId);
+  const [cookies] = useCookies(['drawmaPlayerId']);
+  const playerId = cookies.drawmaPlayerId;
 
   React.useEffect(() => {
     gameDoc.get().then((game) => {
@@ -207,9 +210,10 @@ const GameRound = ({gameId}) => {
         .collection('drawings')
         .add({
           drawing: canvasRef.current.getSaveData(),
+          playerId: playerId,
         })
         .then(() => {
-          navigate(`/game/${gameId}/finished`);
+          navigate(`/game/${gameId}/rating`);
         });
     }
     if (seconds === 5) {
@@ -224,7 +228,6 @@ const GameRound = ({gameId}) => {
       <audio autoPlay loop ref={gameSoundTag} src={GameSound} />
       <audio ref={fiveSecSoundTag} src={FiveSecSound} />
       <TopBar text={'ROUND 1'} />
-      <SoundButton />
       <Timer seconds={seconds} setSeconds={setSeconds} />
       <DrawingBoard image={image} canvasRef={canvasRef} color={color} setColor={setColor} />
       <HueContainer>

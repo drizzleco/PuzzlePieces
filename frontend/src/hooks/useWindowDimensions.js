@@ -18,7 +18,6 @@ export default function useWindowDimensions() {
     }
 
     window.addEventListener('resize', handleResize, {passive: false, capture: false});
-    console.log('Ayyyyyyy');
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 

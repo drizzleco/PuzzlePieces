@@ -192,7 +192,6 @@ const playGame = (
         setGameError(true);
       } else {
         // join game
-        console.log(playerID);
         dbh.collection('game').doc(gameId).collection('players').doc(playerID).set({
           username: name,
           color: color,

@@ -74,44 +74,53 @@ const ContentButton = styled(Button)`
   background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : colors.yellow4)};
 `;
 
-const LeaderBoardUser = ({user}) => {
+const LeaderBoardUser = ({drawingId, gameDoc, score, index}) => {
+  const [username, setUsername] = React.useState();
+  React.useEffect(async () => {
+    const drawing = await gameDoc.collection('drawings').doc(drawingId).get();
+    const playerId = drawing.data().playerId;
+    if (playerId) {
+      const person = await gameDoc.collection('players').doc(playerId).get();
+      setUsername(person.data().username);
+    }
+  }, [drawingId]);
   return (
     <LeaderBoardRow>
-      <LeaderBoardText>1</LeaderBoardText>
-      <LeaderBoardText>Diana</LeaderBoardText>
+      <LeaderBoardText>{index + 1}</LeaderBoardText>
+      <LeaderBoardText>{username}</LeaderBoardText>
       <LeaderBoardText>x</LeaderBoardText>
-      <LeaderBoardText>300</LeaderBoardText>
+      <LeaderBoardText>{score * 50}</LeaderBoardText>
     </LeaderBoardRow>
   );
 };
 
+const getDrawingScores = async (gameDoc) => {
+  let scoresMap = {};
+  const drawings = await gameDoc.collection('drawings').get();
+  let drawingIds = [];
+  drawings.forEach((drawing) => {
+    drawingIds.push(drawing.id);
+  });
+  for (const drawingId of drawingIds) {
+    let allScores = [];
+    let drawingScore = 0;
+    const scores = await gameDoc.collection('drawings').doc(drawingId).collection('scores').get();
+    scores.forEach((score) => {
+      allScores.push(score.data());
+    });
+    drawingScore = _.sum(_.values(_.reduce(allScores, _.extend)));
+    scoresMap[drawingId] = drawingScore;
+  }
+  return scoresMap;
+};
+
 const LeaderBoard = ({gameId}) => {
   const gameDoc = dbh.collection('game').doc(gameId);
-  const [playerScores, setPlayerScores] = React.useState([]);
+  const [drawingScores, setDrawingScores] = React.useState({});
 
-  React.useEffect(() => {
-    // TODO(herrick + philip) : Figure out how to make this work
-    // Idea 1:
-    // Loop through all scores and re-calculate scores. Add playerId to
-    // drawing object then, map total score from drawing to player's name and score.
-    // Idea 2:
-    // We need an object of the scores. On drawing, pull the score.
-    // Need a flag to say when everyone is done.
-    //gameDoc
-    //  .collection('drawings')
-    //  .get()
-    //  .then((drawings) => {
-    //    drawings.docs.map((drawing) => {
-    //      let scores = [];
-    //      drawing
-    //        .collection('scores')
-    //        .get()
-    //        .then((score) => {
-    //          score.push(score);
-    //        });
-    //      const drawingScore = _.sum(_.values(_.merge(scores)));
-    //    });
-    //  });
+  React.useEffect(async () => {
+    const drawingScoresMap = await getDrawingScores(gameDoc);
+    setDrawingScores(drawingScoresMap);
   }, []);
 
   return (
@@ -124,8 +133,17 @@ const LeaderBoard = ({gameId}) => {
           <LeaderBoardWrapper>
             <LeaderBoardTitle>Leaderboard</LeaderBoardTitle>
             <LeaderBoardUsersContent>
-              {[1, 2, 3].map((num) => {
-                return <LeaderBoardUser></LeaderBoardUser>;
+              {Object.entries(drawingScores).map((tuple, index) => {
+                const [drawingId, score] = tuple;
+                return (
+                  <LeaderBoardUser
+                    key={drawingId}
+                    index={index}
+                    gameDoc={gameDoc}
+                    drawingId={drawingId}
+                    score={score}
+                  ></LeaderBoardUser>
+                );
               })}
             </LeaderBoardUsersContent>
           </LeaderBoardWrapper>

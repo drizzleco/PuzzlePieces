@@ -29,7 +29,6 @@ const Game = () => {
             .doc(playerID)
             .get()
             .then((player) => {
-              console.log(player.exists);
               if (!player.exists) navigate('/', {state: {gameId: gameId}});
             });
           setGame(doc.data());
