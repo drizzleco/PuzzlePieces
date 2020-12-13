@@ -235,7 +235,7 @@ const Homepage = ({location}) => {
       </TopBarDiv>
       <audio autoPlay loop src={HomeSound} />
       <MainColumn>
-        <AboutButton>About the creators</AboutButton>
+        <AboutButton onClick={() => navigate('/about')}>About the creators</AboutButton>
         <Logo src={logo} />
         <NameBubble color={name ? color : colors.gray}>
           <NameInitial>{name ? name[0] : 'N'}</NameInitial>

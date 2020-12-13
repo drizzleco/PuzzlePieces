@@ -7,6 +7,7 @@ import GameRound from './components/GameRound';
 import CreateGame from './components/CreateGame';
 import LeaderBoard from './components/Leaderboard';
 import RatingScreen from './components/RatingScreen';
+import AboutPage from './components/AboutPage';
 import {Router} from '@reach/router';
 import {MuteContext} from './context/mute-context';
 
@@ -27,6 +28,7 @@ const App = () => {
         <GameRound path='/game/round/:roundID' />
         <LeaderBoard path='/game/:gameId/leaderboard' />
         <RatingScreen path='/game/:gameId/rating' />
+        <AboutPage path='/about' />
       </Router>
     </MuteContext.Provider>
   );

@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import {navigate} from '@reach/router';
 import Space from './Space';
 import logo from '../assets/images/logo.svg';
+import LeaderboardSound from '../assets/sounds/leaderboard.wav';
 import _ from 'lodash';
 
 const MainContent = styled.div`
@@ -125,6 +126,7 @@ const LeaderBoard = ({gameId}) => {
 
   return (
     <Wrapper>
+      <audio autoPlay loop src={LeaderboardSound} />
       <TopBar color={colors.orange1}>
         <Logo src={logo}></Logo>
       </TopBar>

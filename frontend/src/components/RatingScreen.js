@@ -10,6 +10,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import CanvasDraw from 'react-canvas-draw';
 import {useCookies} from 'react-cookie';
+import RatingsSound from '../assets/sounds/ratings.mp3';
 
 const NavButton = styled(Button)`
   border: 4px solid ${colors.purple3};
@@ -168,6 +169,7 @@ const RatingScreen = () => {
 
   return (
     <Wrapper>
+      <audio autoPlay loop src={RatingsSound} />
       <TopBar text={'Rate the drawings'} color={colors.orange1} />
       <Row style={{justifyContent: 'space-around'}}>
         <NavButton onClick={() => setCurrentIndex(Math.max(currentIndex - 1, 0))}>
