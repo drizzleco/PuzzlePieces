@@ -151,12 +151,11 @@ const LeaderBoard = ({gameId}) => {
   const [drawingScores, setDrawingScores] = React.useState([]);
 
   React.useEffect(async () => {
-    const drawingScoresMap = await getDrawingScores(gameDoc);
-    drawingScoresMap.sort(function (a, b) {
+    const drawingScoresMaps = await getDrawingScores(gameDoc);
+    drawingScoresMaps.sort(function (a, b) {
       return Object.values(b)[0] - Object.values(a)[0];
     });
-    console.log(drawingScoresMap);
-    setDrawingScores(drawingScoresMap);
+    setDrawingScores(drawingScoresMaps);
   }, []);
 
   return (
