@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Row, Column, Wrapper} from './style';
 import dbh from '../firebase.js';
-import TopBar, {TopBarDiv} from './TopBar';
+import TopBar from './TopBar';
 import colors from '../colors';
 import styled from 'styled-components';
 import {navigate, useParams} from '@reach/router';
@@ -11,6 +11,7 @@ import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
 import CanvasDraw from 'react-canvas-draw';
 import {useCookies} from 'react-cookie';
 import RatingsSound from '../assets/sounds/ratings.mp3';
+import Timer from './Timer';
 
 const NavButton = styled(Button)`
   border: 4px solid ${colors.purple3};
@@ -18,6 +19,25 @@ const NavButton = styled(Button)`
   height: 50px;
   width: 50px;
   background-color: ${colors.white16};
+`;
+
+const ProgressBox = styled.div`
+  width: 48px;
+  background: ${colors.purple3};
+  border: 3px solid ${colors.yellow4};
+  border-radius: 0px 0px 8px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -13px;
+`;
+
+const ProgressBoxText = styled.h2`
+  font-family: Sniglet;
+  font-size: 15px;
+  color: ${colors.white16};
+  padding: 5px;
+  margin: 0;
 `;
 
 const RatingsBarBox = styled.div`
@@ -38,12 +58,14 @@ const RatingsBar = ({
   value,
   setValue,
   playerId,
+  nextImage,
   isLastIndex,
   gameId,
 }) => {
   const handleClick = (value) => {
     setValue(value);
     setScores({...scores, [docId]: value});
+    setTimeout(nextImage, 250); // affirm selection happen
   };
 
   return (
@@ -63,9 +85,6 @@ const RatingsBar = ({
             </>
           );
         })}
-        {isLastIndex && (
-          <GoToLeaderBoardButton scores={scores} playerId={playerId} gameId={gameId} />
-        )}
       </RatingsBubbleWrapper>
     </RatingsBarBox>
   );
@@ -83,11 +102,6 @@ const sendScores = ({scores, playerId, gameId}) => {
       });
   }
   navigate(`/game/${gameId}/leaderboard`);
-};
-
-const GoToLeaderBoardButton = ({scores, playerId, gameId}) => {
-  console.log(gameId, 'leaderboard button gameId', gameId);
-  return <Button onClick={() => sendScores({scores, playerId, gameId})}>Go to Leaderboard</Button>;
 };
 
 const Icon = styled(FontAwesomeIcon)`
@@ -126,7 +140,7 @@ const RefCanvasDraw = ({drawings, currentIndex}) => {
   const drawing = drawings[currentIndex];
   const canvasRef = React.useRef();
   React.useEffect(() => {
-    canvasRef.current.loadSaveData(drawing, false);
+    canvasRef.current.loadSaveData(drawing, true);
   }, [drawing]);
   return <CanvasDraw ref={canvasRef} disabled hideInterface hideGrid />;
 };
@@ -135,10 +149,12 @@ const RatingScreen = () => {
   const {gameId} = useParams();
   const [cookies] = useCookies(['drawmaPlayerId']);
   const [drawings, setDrawings] = React.useState([]);
+  const [originalImageLinks, setOriginalImageLinks] = React.useState([]);
   const [scores, setScores] = React.useState({});
   const [indexDocIdMap, setIndexDocIdMap] = React.useState({});
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [rating, setRating] = React.useState(0);
+  const [seconds, setSeconds] = React.useState(30);
   const gameDoc = dbh.collection('game').doc(gameId);
   const playerId = cookies.drawmaPlayerId;
 
@@ -147,12 +163,14 @@ const RatingScreen = () => {
       .collection('drawings')
       .get()
       .then((data) => {
-        let values = [];
+        let drawings = [];
+        let originalImageLinks = [];
         let scores = {};
         let indexToDocId = {};
         let index = 0;
         data.forEach((doc) => {
-          values.push(doc.data().drawing);
+          drawings.push(doc.data().drawing);
+          originalImageLinks.push(doc.data().imageLink);
           scores[doc.id] = 0;
           indexToDocId[index] = doc.id;
           index += 1;
@@ -160,22 +178,39 @@ const RatingScreen = () => {
         // doc.id upload later
         // drawing string for rendering
         // index to map from doc.id to an array
-        setDrawings(values);
+        setDrawings(drawings);
+        setOriginalImageLinks(originalImageLinks);
         setIndexDocIdMap(indexToDocId);
         setScores(scores);
         setCurrentIndex(0);
       });
   }, []);
 
+  React.useEffect(() => {
+    if (seconds === 0) {
+      sendScores({scores, playerId, gameId});
+    }
+  });
+
   return (
     <Wrapper>
       <audio autoPlay loop src={RatingsSound} />
       <TopBar text={'Rate the drawings'} color={colors.orange1} />
+      <Row>
+        <Column>
+          <Timer seconds={seconds} setSeconds={setSeconds} />
+          <ProgressBox>
+            <ProgressBoxText>
+              {currentIndex + 1} of {drawings.length}
+            </ProgressBoxText>
+          </ProgressBox>
+        </Column>
+      </Row>
       <Row style={{justifyContent: 'space-around'}}>
         <NavButton onClick={() => setCurrentIndex(Math.max(currentIndex - 1, 0))}>
           <Icon icon={faChevronLeft}></Icon>
         </NavButton>
-        <ImagePlaceholder src={'https://puzzlepieces-25386.web.app/airplane.png'} />
+        <ImagePlaceholder src={originalImageLinks[currentIndex]} />
         <Divider />
         {drawings.length > 0 && <RefCanvasDraw drawings={drawings} currentIndex={currentIndex} />}
         <NavButton onClick={() => setCurrentIndex(Math.min(currentIndex + 1, drawings.length - 1))}>
@@ -192,7 +227,8 @@ const RatingScreen = () => {
             setScores={setScores}
             value={scores[indexDocIdMap[currentIndex]]}
             setValue={setRating}
-            isLastIndex={currentIndex == drawings.length - 1}
+            nextImage={() => setCurrentIndex(Math.min(currentIndex + 1, drawings.length - 1))}
+            isLastIndex={currentIndex === drawings.length - 1}
             playerId={playerId}
             gameId={gameId}
           />

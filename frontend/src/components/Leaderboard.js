@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Row, Wrapper} from './style';
 import dbh from '../firebase.js';
-import TopBar, {TopBarDiv} from './TopBar';
+import TopBar from './TopBar';
 import colors from '../colors';
 import styled from 'styled-components';
 import {navigate} from '@reach/router';
@@ -12,12 +12,6 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faStar} from '@fortawesome/free-solid-svg-icons';
 import {faMeh} from '@fortawesome/free-regular-svg-icons';
 import _ from 'lodash';
-
-const MainContent = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-`;
 
 const Logo = styled.img`
   height: 80px;
@@ -148,7 +142,8 @@ const getDrawingScores = async (gameDoc) => {
 
 const LeaderBoard = ({gameId}) => {
   const gameDoc = dbh.collection('game').doc(gameId);
-  const [drawingScores, setDrawingScores] = React.useState([]);
+  const [drawingScores, setDrawingScores] = React.useState({});
+  const [bossImageLink, setBossImageLink] = React.useState('');
 
   React.useEffect(async () => {
     const drawingScoresMaps = await getDrawingScores(gameDoc);
@@ -156,6 +151,9 @@ const LeaderBoard = ({gameId}) => {
       return Object.values(b)[0] - Object.values(a)[0];
     });
     setDrawingScores(drawingScoresMaps);
+    gameDoc.get().then((game) => {
+      setBossImageLink(game.data().bossImageLink);
+    });
   }, []);
 
   return (
@@ -186,7 +184,7 @@ const LeaderBoard = ({gameId}) => {
         </LeaderBoardContent>
         <Space width={40} />
         <LeaderBoardContent>
-          <FinalImage src={'https://puzzlepieces-25386.web.app/airplane.png'}></FinalImage>
+          <FinalImage src={bossImageLink}></FinalImage>
         </LeaderBoardContent>
       </Row>
       <Row>

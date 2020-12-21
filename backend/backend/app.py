@@ -35,7 +35,7 @@ def start_game():
     # delegate random image to each player
     players = db.collection("game").document(game_id).collection("players")
     num_players = len(list(players.get()))
-    if bucket.blob(f"splits/{name}/{num_players}/0.png").exists():
+    if not bucket.blob(f"splits/{name}/{num_players}/0.png").exists():
         slice_images(bucket=bucket, name=name, num_split=num_players)
 
     for index, player in enumerate(players.stream()):
@@ -46,11 +46,13 @@ def start_game():
             .document(player.id)
         )
         player_object.update(
-            {"imageRoute": f"{BUCKET_BASE_URL}/splits/{name}/{num_players}/{index}.png"}
+            {"imageLink": f"{BUCKET_BASE_URL}/splits/{name}/{num_players}/{index}.png"}
         )
 
-    # update game state to round
-    game_object.update({"state": "ROUND"})
+    # update game state and save boss image
+    game_object.update(
+        {"state": "ROUND", "bossImageLink": f"{BUCKET_BASE_URL}/boss images/{name}.png"}
+    )
     return "Success!", 200
 
 

@@ -22,7 +22,7 @@ def slice_images(bucket, name: str, num_split: int) -> None:
             upload_file(
                 bucket=bucket,
                 index=index,
-                name="airplane",
+                name=name,
                 num_split=num_split,
                 filename=filename,
             )
