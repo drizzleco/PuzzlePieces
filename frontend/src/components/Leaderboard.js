@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Row, Wrapper} from './style';
 import dbh from '../firebase.js';
-import TopBar, {TopBarDiv} from './TopBar';
+import TopBar from './TopBar';
 import colors from '../colors';
 import styled from 'styled-components';
 import {navigate} from '@reach/router';
@@ -9,12 +9,6 @@ import Space from './Space';
 import logo from '../assets/images/logo.svg';
 import LeaderboardSound from '../assets/sounds/leaderboard.wav';
 import _ from 'lodash';
-
-const MainContent = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-`;
 
 const Logo = styled.img`
   height: 80px;
