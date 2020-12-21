@@ -35,7 +35,7 @@ def start_game():
     # delegate random image to each player
     players = db.collection("game").document(game_id).collection("players")
     num_players = len(list(players.get()))
-    if bucket.blob(f"splits/{name}/{num_players}/0.png").exists():
+    if not bucket.blob(f"splits/{name}/{num_players}/0.png").exists():
         slice_images(bucket=bucket, name=name, num_split=num_players)
 
     for index, player in enumerate(players.stream()):
