@@ -142,7 +142,7 @@ const getDrawingScores = async (gameDoc) => {
 
 const LeaderBoard = ({gameId}) => {
   const gameDoc = dbh.collection('game').doc(gameId);
-  const [drawingScores, setDrawingScores] = React.useState({});
+  const [drawingScores, setDrawingScores] = React.useState([]);
   const [bossImageLink, setBossImageLink] = React.useState('');
 
   React.useEffect(async () => {
