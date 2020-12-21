@@ -6,13 +6,13 @@ import {Wrapper} from './style';
 import colors from '../colors';
 import Space from './Space';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faUndoAlt, faStopwatch, faEraser} from '@fortawesome/free-solid-svg-icons';
+import {faUndoAlt, faEraser} from '@fortawesome/free-solid-svg-icons';
 import dbh from '../firebase.js';
 import {navigate} from '@reach/router';
 import TopBar from './TopBar';
 import GameSound from '../assets/sounds/game.wav';
 import FiveSecSound from '../assets/sounds/fivesec.wav';
-import SoundButton from './SoundButton';
+import Timer from './Timer';
 import {useCookies} from 'react-cookie';
 
 const Container = styled.div`
@@ -97,62 +97,6 @@ const DrawingBoard = ({image, color, setColor, canvasRef}) => {
         <IconButton icon={faEraser} onClick={() => setColor(colors.white16)} />
       </SelectorSettings>
     </DrawingContainer>
-  );
-};
-
-const TimerDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  margin: 10px;
-`;
-
-const TimerText = styled.h2`
-  font-family: Sniglet;
-  font-size: 24px;
-  font-weight: 400;
-  line-height: 30px;
-  letter-spacing: 0em;
-  margin: 0;
-  border-left: 3px solid ${colors.yellow4};
-`;
-
-const TimerBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background: ${colors.white16};
-  border: 3px solid ${colors.yellow4};
-  box-sizing: border-box;
-  border-radius: 8px;
-`;
-
-const format = (seconds) => {
-  let mins = Math.floor(seconds / 60);
-  let secs = seconds % 60;
-  return mins + ':' + (secs < 10 ? '0' + secs : secs);
-};
-
-const Timer = ({seconds, setSeconds}) => {
-  React.useEffect(() => {
-    let interval = null;
-    interval = setInterval(() => {
-      setSeconds((seconds) => seconds - 1);
-    }, 1000);
-    if (seconds === 0) {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [seconds, setSeconds]);
-
-  return (
-    <TimerDiv>
-      <TimerBox>
-        <FontAwesomeIcon icon={faStopwatch} style={{marginLeft: '10px'}} />
-        <Space width={10} />
-        <TimerText>{format(seconds)}</TimerText>
-      </TimerBox>
-    </TimerDiv>
   );
 };
 
