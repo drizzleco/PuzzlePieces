@@ -1,35 +1,57 @@
+import random
+
+import firebase_admin
+from firebase_admin import credentials, firestore, storage
 from flask import Flask, request
-from image_slicer import slice
+
+from backend.defs import BUCKET_BASE_URL, FILEPATH_NAMES
+from backend.utils import slice_images
+
 
 app = Flask(__name__)
+
+cred = credentials.Certificate("backend/private_key.json")
+firebase_app = firebase_admin.initialize_app(
+    cred, {"storageBucket": "puzzlepieces-25386.appspot.com"}
+)
+db = firestore.client()
+bucket = storage.bucket(app=firebase_app)
 
 
 @app.route("/")
 def hello_world():
-    return "Hello, World!"
+    return "Don't use this"
 
 
-@app.route("/image-slicer")
-def image_slicer():
-    image_url = (
-        request.args.get("url")
-        or "https://storage.googleapis.com/puzzlepieces-25386.appspot.com/boss%20images/airplane.png"
-    )
-    if not image_url:
-        return "No query param image_url provided"
-    # TODO: Download file from google storage -> write to NamedTemporaryFile
-    # list_of_file_names = slice("backend/airplane.png", 5)
+@app.route("/start-game")
+def start_game():
+    game_id = request.args.get("id")
+    game_object = db.collection("game").document(game_id)
+    game_data = game_object.get()
+    if not game_data.exists:
+        return "Game data does not exist", 404
+    name = random.choice(list(FILEPATH_NAMES.keys()))
 
-    # boss_images/airplane.png
-    # CONDITIONAL splits/airplane/4/
+    # delegate random image to each player
+    players = db.collection("game").document(game_id).collection("players")
+    num_players = len(list(players.get()))
+    if bucket.blob(f"splits/{name}/{num_players}/0.png").exists():
+        slice_images(bucket=bucket, name=name, num_split=num_players)
 
-    # TODO:
-    # 1. Go through each list of file names.
-    # 2. Rename them to the pieces that you want (airplane/1.png, airplane/2.png)
-    # 3. Write a metadata file to firestorage.
-    return image_url
+    for index, player in enumerate(players.stream()):
+        player_object = (
+            db.collection("game")
+            .document(game_id)
+            .collection("players")
+            .document(player.id)
+        )
+        player_object.update(
+            {"imageRoute": f"{BUCKET_BASE_URL}/splits/{name}/{num_players}/{index}.png"}
+        )
+
+    # update game state to round
+    game_object.update({"state": "ROUND"})
+    return "Success!", 200
 
 
-# https://puzzlepieces-25386.web.app/airplane.png
-# https://storage.googleapis.com/puzzlepieces-25386.appspot.com/boss%20images/airplane.png
-
+app.run(debug=True)

@@ -13,6 +13,7 @@ web-build/
 .env
 cdn/
 .firebase/ 
+private_key.json
 
 # macOS
 .DS_Store

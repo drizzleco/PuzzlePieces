@@ -8,7 +8,9 @@ authors = ["DrizzleCo <jmslca123@gmail.com>"]
 python = "^3.8"
 Flask = "^1.1.2"
 image-slicer = "^2.1.1"
-pyrebase = "^3.0.27"
+firebase-admin = "^4.5.0"
+black = "^20.8b1"
+isort = "^5.6.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
