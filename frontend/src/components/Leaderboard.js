@@ -8,6 +8,9 @@ import {navigate} from '@reach/router';
 import Space from './Space';
 import logo from '../assets/images/logo.svg';
 import LeaderboardSound from '../assets/sounds/leaderboard.wav';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faStar} from '@fortawesome/free-solid-svg-icons';
+import {faMeh} from '@fortawesome/free-regular-svg-icons';
 import _ from 'lodash';
 
 const MainContent = styled.div`
@@ -75,6 +78,33 @@ const ContentButton = styled(Button)`
   background-color: ${(props) => (props.backgroundColor ? props.backgroundColor : colors.yellow4)};
 `;
 
+const StarsWrapper = styled.div`
+  width: 20%;
+  display: flex;
+  align-items: center;
+`;
+
+const StarIcon = styled(FontAwesomeIcon)`
+  color: ${colors.yellow4};
+  font-size: 12px;
+`;
+
+const Stars = ({place}) => {
+  const winners = [3, 2, 1];
+
+  return (
+    <StarsWrapper>
+      {place < 3 ? (
+        [...Array(winners[place])].map(() => {
+          return <StarIcon icon={faStar}></StarIcon>;
+        })
+      ) : (
+        <FontAwesomeIcon icon={faMeh} style={{fontSize: '12px'}} />
+      )}
+    </StarsWrapper>
+  );
+};
+
 const LeaderBoardUser = ({drawingId, gameDoc, score, index}) => {
   const [username, setUsername] = React.useState();
   React.useEffect(async () => {
@@ -87,16 +117,18 @@ const LeaderBoardUser = ({drawingId, gameDoc, score, index}) => {
   }, [drawingId]);
   return (
     <LeaderBoardRow>
-      <LeaderBoardText>{index + 1}</LeaderBoardText>
+      <LeaderBoardText>{index + 1}.</LeaderBoardText>
       <LeaderBoardText>{username}</LeaderBoardText>
       <LeaderBoardText>x</LeaderBoardText>
       <LeaderBoardText>{score * 50}</LeaderBoardText>
+      <Stars place={index} />
     </LeaderBoardRow>
   );
 };
 
 const getDrawingScores = async (gameDoc) => {
-  let scoresMap = {};
+  let scoresList = [];
+  let scoreMap = {};
   const drawings = await gameDoc.collection('drawings').get();
   let drawingIds = [];
   drawings.forEach((drawing) => {
@@ -110,17 +142,21 @@ const getDrawingScores = async (gameDoc) => {
       allScores.push(score.data());
     });
     drawingScore = _.sum(_.values(_.reduce(allScores, _.extend)));
-    scoresMap[drawingId] = drawingScore;
+    scoresList.push({[drawingId]: drawingScore});
   }
-  return scoresMap;
+  return scoresList;
 };
 
 const LeaderBoard = ({gameId}) => {
   const gameDoc = dbh.collection('game').doc(gameId);
-  const [drawingScores, setDrawingScores] = React.useState({});
+  const [drawingScores, setDrawingScores] = React.useState([]);
 
   React.useEffect(async () => {
     const drawingScoresMap = await getDrawingScores(gameDoc);
+    drawingScoresMap.sort(function (a, b) {
+      return Object.values(b)[0] - Object.values(a)[0];
+    });
+    console.log(drawingScoresMap);
     setDrawingScores(drawingScoresMap);
   }, []);
 
@@ -135,8 +171,8 @@ const LeaderBoard = ({gameId}) => {
           <LeaderBoardWrapper>
             <LeaderBoardTitle>Leaderboard</LeaderBoardTitle>
             <LeaderBoardUsersContent>
-              {Object.entries(drawingScores).map((tuple, index) => {
-                const [drawingId, score] = tuple;
+              {drawingScores.map((scoreObj, index) => {
+                const [drawingId, score] = Object.entries(scoreObj)[0];
                 return (
                   <LeaderBoardUser
                     key={drawingId}
