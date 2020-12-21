@@ -135,7 +135,7 @@ const RatingScreen = () => {
   const {gameId} = useParams();
   const [cookies] = useCookies(['drawmaPlayerId']);
   const [drawings, setDrawings] = React.useState([]);
-  const [originalImages, setOriginalImages] = React.useState([]);
+  const [originalImageLinks, setOriginalImageLinks] = React.useState([]);
   const [scores, setScores] = React.useState({});
   const [indexDocIdMap, setIndexDocIdMap] = React.useState({});
   const [currentIndex, setCurrentIndex] = React.useState(0);
@@ -149,13 +149,13 @@ const RatingScreen = () => {
       .get()
       .then((data) => {
         let drawings = [];
-        let originalImages = [];
+        let originalImageLinks = [];
         let scores = {};
         let indexToDocId = {};
         let index = 0;
         data.forEach((doc) => {
           drawings.push(doc.data().drawing);
-          originalImages.push(doc.data().imageLink);
+          originalImageLinks.push(doc.data().imageLink);
           scores[doc.id] = 0;
           indexToDocId[index] = doc.id;
           index += 1;
@@ -165,7 +165,7 @@ const RatingScreen = () => {
         // index to map from doc.id to an array
         console.log(indexToDocId);
         setDrawings(drawings);
-        setOriginalImages(originalImages);
+        setOriginalImageLinks(originalImageLinks);
         setIndexDocIdMap(indexToDocId);
         setScores(scores);
         setCurrentIndex(0);
@@ -180,7 +180,7 @@ const RatingScreen = () => {
         <NavButton onClick={() => setCurrentIndex(Math.max(currentIndex - 1, 0))}>
           <Icon icon={faChevronLeft}></Icon>
         </NavButton>
-        <ImagePlaceholder src={originalImages[currentIndex]} />
+        <ImagePlaceholder src={originalImageLinks[currentIndex]} />
         <Divider />
         {drawings.length > 0 && <RefCanvasDraw drawings={drawings} currentIndex={currentIndex} />}
         <NavButton onClick={() => setCurrentIndex(Math.min(currentIndex + 1, drawings.length - 1))}>

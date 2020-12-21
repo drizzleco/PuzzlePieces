@@ -118,13 +118,13 @@ const getDrawingScores = async (gameDoc) => {
 const LeaderBoard = ({gameId}) => {
   const gameDoc = dbh.collection('game').doc(gameId);
   const [drawingScores, setDrawingScores] = React.useState({});
-  const [bossImage, setBossImage] = React.useState('');
+  const [bossImageLink, setBossImageLink] = React.useState('');
 
   React.useEffect(async () => {
     const drawingScoresMap = await getDrawingScores(gameDoc);
     setDrawingScores(drawingScoresMap);
     gameDoc.get().then((game) => {
-      setBossImage(game.data().bossImageLink);
+      setBossImageLink(game.data().bossImageLink);
     });
   }, []);
 
@@ -156,7 +156,7 @@ const LeaderBoard = ({gameId}) => {
         </LeaderBoardContent>
         <Space width={40} />
         <LeaderBoardContent>
-          <FinalImage src={bossImage}></FinalImage>
+          <FinalImage src={bossImageLink}></FinalImage>
         </LeaderBoardContent>
       </Row>
       <Row>
