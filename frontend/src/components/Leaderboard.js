@@ -118,10 +118,14 @@ const getDrawingScores = async (gameDoc) => {
 const LeaderBoard = ({gameId}) => {
   const gameDoc = dbh.collection('game').doc(gameId);
   const [drawingScores, setDrawingScores] = React.useState({});
+  const [bossImage, setBossImage] = React.useState('');
 
   React.useEffect(async () => {
     const drawingScoresMap = await getDrawingScores(gameDoc);
     setDrawingScores(drawingScoresMap);
+    gameDoc.get().then((game) => {
+      setBossImage(game.data().bossImageLink);
+    });
   }, []);
 
   return (
@@ -152,7 +156,7 @@ const LeaderBoard = ({gameId}) => {
         </LeaderBoardContent>
         <Space width={40} />
         <LeaderBoardContent>
-          <FinalImage src={'https://puzzlepieces-25386.web.app/airplane.png'}></FinalImage>
+          <FinalImage src={bossImage}></FinalImage>
         </LeaderBoardContent>
       </Row>
       <Row>

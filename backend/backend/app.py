@@ -49,8 +49,10 @@ def start_game():
             {"imageLink": f"{BUCKET_BASE_URL}/splits/{name}/{num_players}/{index}.png"}
         )
 
-    # update game state to round
-    game_object.update({"state": "ROUND"})
+    # update game state and save boss image
+    game_object.update(
+        {"state": "ROUND", "bossImageLink": f"{BUCKET_BASE_URL}/boss images/{name}.png"}
+    )
     return "Success!", 200
 
 

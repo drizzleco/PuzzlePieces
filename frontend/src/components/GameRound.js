@@ -202,6 +202,7 @@ const GameRound = ({gameId}) => {
         .add({
           drawing: canvasRef.current.getSaveData(),
           playerId: playerId,
+          imageLink: image,
         })
         .then(() => {
           navigate(`/game/${gameId}/rating`);
