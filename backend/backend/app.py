@@ -46,7 +46,7 @@ def start_game():
             .document(player.id)
         )
         player_object.update(
-            {"imageRoute": f"{BUCKET_BASE_URL}/splits/{name}/{num_players}/{index}.png"}
+            {"imageLink": f"{BUCKET_BASE_URL}/splits/{name}/{num_players}/{index}.png"}
         )
 
     # update game state to round

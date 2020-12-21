@@ -186,22 +186,13 @@ const GameRound = ({gameId}) => {
     gameDoc.get().then((game) => {
       setSeconds(game.data().timePerRound);
     });
-    // whole images would be stored in cdn
-    // we'd want to get the split images from flask backend that has
-    // our image splitting algo
-    // this just a proof of concept for now
-    const cdnUrl = 'https://puzzlepieces-25386.web.app/';
-    const images = [
-      'airplane.png',
-      'arctichare.png',
-      'baboon.png',
-      'boat.png',
-      'cat.png',
-      'peppers.png',
-      'pool.png',
-    ];
-    const imageFile = images[Math.floor(Math.random() * images.length)];
-    setImage(cdnUrl + imageFile);
+    gameDoc
+      .collection('players')
+      .doc(playerId)
+      .get()
+      .then((player) => {
+        setImage(player.data().imageLink);
+      });
   }, [gameId]);
 
   React.useEffect(() => {
