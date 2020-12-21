@@ -128,7 +128,6 @@ const LeaderBoardUser = ({drawingId, gameDoc, score, index}) => {
 
 const getDrawingScores = async (gameDoc) => {
   let scoresList = [];
-  let scoreMap = {};
   const drawings = await gameDoc.collection('drawings').get();
   let drawingIds = [];
   drawings.forEach((drawing) => {
