@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button, Row, Column, Wrapper} from './style';
 import dbh from '../firebase.js';
-import TopBar, {TopBarDiv} from './TopBar';
+import TopBar from './TopBar';
 import colors from '../colors';
 import styled from 'styled-components';
 import {navigate, useParams} from '@reach/router';
