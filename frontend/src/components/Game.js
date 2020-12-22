@@ -57,7 +57,7 @@ const Game = () => {
     return game.state === 'ROUND' ? (
       <GameRound gameId={gameId} />
     ) : (
-      <WaitingRoom gameDoc={gameDoc} game={game} />
+      <WaitingRoom gameId={gameId} game={game} />
     );
   }
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import dbh from '../firebase.js';
 import {TopBarDiv, TopBarTitle} from './TopBar';
 import {Wrapper, Row, Column, Button, ErrorMessage} from './style';
 import CanvasDraw from 'react-canvas-draw';
@@ -11,6 +12,8 @@ import {faClone} from '@fortawesome/free-solid-svg-icons';
 import {useCookies} from 'react-cookie';
 import {navigate} from '@reach/router';
 import SoundButton from './SoundButton';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Text = styled.h3`
   font-family: Sniglet;
@@ -126,7 +129,8 @@ const copyLink = () => {
   document.body.removeChild(el);
 };
 
-const WaitingRoom = ({gameDoc, game}) => {
+const WaitingRoom = ({gameId, game}) => {
+  const gameDoc = dbh.collection('game').doc(gameId);
   const [players, setPlayers] = React.useState([]);
   const [host, setHost] = React.useState(false);
   const [hostUsername, setHostUsername] = React.useState('');
@@ -167,7 +171,7 @@ const WaitingRoom = ({gameDoc, game}) => {
       .collection('players')
       .get()
       .then((players) => {
-        if (players.size > 1) gameDoc.update({state: 'ROUND'});
+        if (players.size > 1) fetch(`${BACKEND_URL}/start-game?id=${gameId}`);
         else setGameError(true);
       });
   };

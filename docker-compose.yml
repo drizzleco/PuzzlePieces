@@ -1,0 +1,13 @@
+version: "3"
+services:
+  web:
+    build: ./backend
+    volumes:
+      - ./backend:/app
+    environment:
+      - PORT=5000
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    entrypoint: python backend/app.py

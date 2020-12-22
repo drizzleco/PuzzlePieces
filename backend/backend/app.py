@@ -1,18 +1,18 @@
+import os
 import random
 
 import firebase_admin
-from firebase_admin import credentials, firestore, storage
+from firebase_admin import firestore, storage
 from flask import Flask, request
 
-from backend.defs import BUCKET_BASE_URL, FILEPATH_NAMES
+from backend.defs import BUCKET_BASE_URL, CREDENTIALS, FILEPATH_NAMES
 from backend.utils import slice_images
-
 
 app = Flask(__name__)
 
-cred = credentials.Certificate("backend/private_key.json")
+
 firebase_app = firebase_admin.initialize_app(
-    cred, {"storageBucket": "puzzlepieces-25386.appspot.com"}
+    CREDENTIALS, options={"storageBucket": "puzzlepieces-25386.appspot.com"},
 )
 db = firestore.client()
 bucket = storage.bucket(app=firebase_app)
@@ -20,7 +20,7 @@ bucket = storage.bucket(app=firebase_app)
 
 @app.route("/")
 def hello_world():
-    return "Don't use this"
+    return "Don't use this helllos"
 
 
 @app.route("/start-game")
@@ -56,4 +56,6 @@ def start_game():
     return "Success!", 200
 
 
-app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True)
