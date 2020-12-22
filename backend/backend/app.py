@@ -4,6 +4,7 @@ import random
 import firebase_admin
 from firebase_admin import firestore, storage
 from flask import Flask, request
+from image_slicer import calc_columns_rows
 
 from backend.defs import BUCKET_BASE_URL, CREDENTIALS, FILEPATH_NAMES
 from backend.utils import slice_images
@@ -20,7 +21,7 @@ bucket = storage.bucket(app=firebase_app)
 
 @app.route("/")
 def hello_world():
-    return "Don't use this helllos"
+    return "Don't use this", 200
 
 
 @app.route("/start-game")
@@ -49,9 +50,16 @@ def start_game():
             {"imageLink": f"{BUCKET_BASE_URL}/splits/{name}/{num_players}/{index}.png"}
         )
 
+    columns, rows = calc_columns_rows(num_players)
+
     # update game state and save boss image
     game_object.update(
-        {"state": "ROUND", "bossImageLink": f"{BUCKET_BASE_URL}/boss images/{name}.png"}
+        {
+            "state": "ROUND",
+            "bossImageLink": f"{BUCKET_BASE_URL}/boss images/{name}.png",
+            "rows": rows,
+            "columns": columns,
+        }
     )
     return "Success!", 200
 

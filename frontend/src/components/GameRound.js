@@ -69,6 +69,8 @@ const IconButton = styled(FontAwesomeIcon)`
 const DrawingBoard = ({image, color, setColor, canvasRef}) => {
   const [brushRadius, setBrushRadius] = React.useState(12);
   // TODO: figure out how to do height and width
+  // We can use getMeta() to get the height/width of a image link
+  // 6 images, 6 heights and widths
 
   return (
     <DrawingContainer>

@@ -12,7 +12,7 @@ def upload_file(bucket, index: int, name: str, num_split: int, filename: str) ->
 
 
 def slice_images(bucket, name: str, num_split: int) -> None:
-    random_file_path = FILEPATH_NAMES[name]
+    random_file_path = f"backend/photos/{FILEPATH_NAMES[name]}"
     with tempfile.TemporaryDirectory() as tmpdirname:
         tiles = slice(random_file_path, num_split, save=False)
         save_tiles(tiles, directory=tmpdirname)
