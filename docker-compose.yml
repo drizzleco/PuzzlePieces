@@ -6,3 +6,4 @@ services:
       - PORT=5000
     ports:
       - "5000:5000"
+    entrypoint: python backend/app.py
