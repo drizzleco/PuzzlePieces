@@ -13,7 +13,7 @@ import {useCookies} from 'react-cookie';
 import {navigate} from '@reach/router';
 import SoundButton from './SoundButton';
 
-const BACKEND_URL = 'https://drawma.herokuapp.com/'; // use http://localhost:5000 for local dev
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const Text = styled.h3`
   font-family: Sniglet;
