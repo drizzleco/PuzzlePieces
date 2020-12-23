@@ -85,9 +85,9 @@ const backToHome = () => {
 
 const CreateGame = () => {
   const [cookies] = useCookies(['drawmaPlayerId', 'drawmaUsername', 'drawmaColor']);
-  const [rounds, setRounds] = React.useState(3);
+  const [rounds, setRounds] = React.useState(1);
   const [seconds, setSeconds] = React.useState(30);
-  const [players, setPlayers] = React.useState(5);
+  const [players, setPlayers] = React.useState(4);
   const playerID = cookies.drawmaPlayerId;
 
   const createNewGame = () => {
@@ -126,17 +126,13 @@ const CreateGame = () => {
           <Label>Max number of players</Label>
         </LabelColumn>
         <SelectionColumn>
-          <SelectionButtons buttonValues={[1, 2, 3]} value={rounds} setValue={setRounds} />
+          <SelectionButtons buttonValues={[1]} value={rounds} setValue={setRounds} />
           <SelectionButtons
             buttonValues={[30, 60, 90, 120]}
             value={seconds}
             setValue={setSeconds}
           />
-          <SelectionButtons
-            buttonValues={[2, 3, 4, 5, 6, 7, 8, 9]}
-            value={players}
-            setValue={setPlayers}
-          />
+          <SelectionButtons buttonValues={[2, 4, 6, 8]} value={players} setValue={setPlayers} />
         </SelectionColumn>
       </Row>
       <Row style={{flex: 2}}>

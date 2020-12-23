@@ -10,4 +10,7 @@ services:
       - "5000:5000"
     env_file:
       - ./backend/.env
+    stdin_open: true
+    tty: true
+    restart: always
     entrypoint: python backend/app.py

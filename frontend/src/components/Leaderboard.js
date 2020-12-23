@@ -166,9 +166,9 @@ const RefCanvasDraw = ({drawing}) => {
 
 const CombinedImage = ({gameId}) => {
   const [drawings, setDrawings] = React.useState(null);
-  const [rows, setRows] = React.useState(0);
-  const [columns, setColumns] = React.useState(0);
-  const numCanvases = rows * columns;
+  const [rows, setRows] = React.useState(null);
+  const [columns, setColumns] = React.useState(null);
+  // const numCanvases = rows * columns;
 
   const gameDoc = dbh.collection('game').doc(gameId);
   const drawingsCollection = dbh.collection('game').doc(gameId).collection('drawings');
@@ -194,8 +194,7 @@ const CombinedImage = ({gameId}) => {
     });
   }, [gameId]);
 
-  console.log(drawings);
-  if (drawings == null) {
+  if (drawings === null || columns === null || rows === null) {
     return null;
   }
 
@@ -206,8 +205,6 @@ const CombinedImage = ({gameId}) => {
           <Row style={{height: '100%'}}>
             {[...Array(columns)].map((colVal, colIndex) => {
               let index = rowIndex * columns + colIndex;
-              console.log('index ' + index);
-              console.log('drawing ' + drawings[index]);
               return <RefCanvasDraw drawing={drawings[index]} />;
             })}
           </Row>
