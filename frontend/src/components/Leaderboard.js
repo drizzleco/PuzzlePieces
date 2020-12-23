@@ -11,6 +11,7 @@ import LeaderboardSound from '../assets/sounds/leaderboard.wav';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faStar} from '@fortawesome/free-solid-svg-icons';
 import {faMeh} from '@fortawesome/free-regular-svg-icons';
+import CanvasDraw from 'react-canvas-draw';
 import _ from 'lodash';
 
 const Logo = styled.img`
@@ -19,11 +20,10 @@ const Logo = styled.img`
 `;
 
 const FinalImage = styled.img`
-  width: 50%;
+  /* width: 50%; */
 `;
 
 const LeaderBoardContent = styled.div`
-  width: 30%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -99,6 +99,14 @@ const Stars = ({place}) => {
   );
 };
 
+const ScrollView = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 1200px;
+  overflow-y: scroll;
+`;
+
 const LeaderBoardUser = ({drawingId, gameDoc, score, index}) => {
   const [username, setUsername] = React.useState();
   React.useEffect(async () => {
@@ -117,6 +125,95 @@ const LeaderBoardUser = ({drawingId, gameDoc, score, index}) => {
       <LeaderBoardText>{score * 50}</LeaderBoardText>
       <Stars place={index} />
     </LeaderBoardRow>
+  );
+};
+
+const Container = styled.div`
+  display: flex;
+  flex: 1;
+`;
+
+const CombinedImageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+`;
+
+const RefCanvasDraw = ({drawing}) => {
+  const canvasRef = React.useRef();
+  const drawingData = JSON.parse(drawing);
+  const height = drawingData.height;
+  const width = drawingData.width;
+
+  React.useEffect(() => {
+    canvasRef.current.loadSaveData(drawing, true);
+  });
+
+  return (
+    <CanvasDraw
+      style={{display: 'flex'}}
+      canvasWidth={width}
+      canvasHeight={height}
+      ref={canvasRef}
+      disabled
+      hideInterface
+      hideGrid
+    />
+  );
+};
+
+const CombinedImage = ({gameId}) => {
+  const [drawings, setDrawings] = React.useState(null);
+  const [rows, setRows] = React.useState(0);
+  const [columns, setColumns] = React.useState(0);
+  const numCanvases = rows * columns;
+
+  const gameDoc = dbh.collection('game').doc(gameId);
+  const drawingsCollection = dbh.collection('game').doc(gameId).collection('drawings');
+
+  React.useEffect(() => {
+    gameDoc.get().then((game) => {
+      let data = game.data();
+      setRows(data.rows);
+      setColumns(data.columns);
+    });
+  }, [gameId]);
+
+  React.useEffect(() => {
+    drawingsCollection.get().then((drawings) => {
+      let tempDrawings = {};
+      drawings.forEach((drawing) => {
+        let drawingData = drawing.data();
+        let splits = drawingData.imageLink.split('/');
+        let index = parseInt(splits[splits.length - 1].split('.')[0], 10);
+        tempDrawings[index] = drawingData.drawing;
+      });
+      setDrawings(tempDrawings);
+    });
+  }, [gameId]);
+
+  console.log(drawings);
+  if (drawings == null) {
+    return null;
+  }
+
+  return (
+    <CombinedImageContainer>
+      {[...Array(rows)].map((rowVal, rowIndex) => {
+        return (
+          <Row style={{height: '100%'}}>
+            {[...Array(columns)].map((colVal, colIndex) => {
+              let index = rowIndex * columns + colIndex;
+              console.log('index ' + index);
+              console.log('drawing ' + drawings[index]);
+              return <RefCanvasDraw drawing={drawings[index]} />;
+            })}
+          </Row>
+        );
+      })}
+    </CombinedImageContainer>
   );
 };
 
@@ -162,6 +259,7 @@ const LeaderBoard = ({gameId}) => {
       <TopBar color={colors.orange1}>
         <Logo src={logo}></Logo>
       </TopBar>
+      <Space height={10} />
       <Row>
         <LeaderBoardContent>
           <LeaderBoardWrapper>
@@ -183,10 +281,19 @@ const LeaderBoard = ({gameId}) => {
           </LeaderBoardWrapper>
         </LeaderBoardContent>
         <Space width={40} />
+      </Row>
+      <Space height={10} />
+      <Row>
         <LeaderBoardContent>
           <FinalImage src={bossImageLink}></FinalImage>
         </LeaderBoardContent>
+        <Space width={100} />
+
+        <LeaderBoardContent>
+          <CombinedImage gameId={gameId} />
+        </LeaderBoardContent>
       </Row>
+      <Space height={10} />
       <Row>
         <ContentButton onClick={() => navigate('/')}>Go Home</ContentButton>
       </Row>

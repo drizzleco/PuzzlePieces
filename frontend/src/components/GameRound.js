@@ -29,14 +29,14 @@ const DrawingContainer = styled.div`
   margin: 0px 40px;
 `;
 
-const Image = styled.img`
-  max-height: 400px;
-  width: 100%;
-  object-fit: scale-down;
+const ImageContainer = styled.img`
+  /* max-height: 400px; */
+  /* width: 100%; */
+  /* object-fit: scale-down; */
 `;
 
 const ReferenceImage = ({source}) => {
-  return <Image src={source}></Image>;
+  return <ImageContainer src={source}></ImageContainer>;
 };
 
 const VerticalBar = styled.div`
@@ -66,22 +66,36 @@ const IconButton = styled(FontAwesomeIcon)`
   cursor: pointer;
 `;
 
-const DrawingBoard = ({image, color, setColor, canvasRef}) => {
-  const [brushRadius, setBrushRadius] = React.useState(12);
-  // TODO: figure out how to do height and width
-  // We can use getMeta() to get the height/width of a image link
-  // 6 images, 6 heights and widths
+const DrawingBoard = ({imageUrl, color, setColor, canvasRef}) => {
+  const [brushRadius, setBrushRadius] = React.useState(8);
+  const [width, setWidth] = React.useState(0);
+  const [height, setHeight] = React.useState(0);
+
+  React.useEffect(() => {
+    let image = new Image();
+    image.src = imageUrl;
+    image.onload = function () {
+      setWidth(image.width);
+      setHeight(image.height);
+    };
+  }, [imageUrl]);
+
+  if (width === 0 || height === 0) {
+    return null;
+  }
 
   return (
     <DrawingContainer>
       <Container style={{flex: 1}}>
-        <ReferenceImage source={image} />
+        <ReferenceImage source={imageUrl} />
       </Container>
       <Space width={40} />
       <VerticalBar />
       <Space width={40} />
       <Container style={{flex: 1}}>
         <CanvasDraw
+          canvasWidth={width}
+          canvasHeight={height}
           ref={canvasRef}
           brushColor={color}
           brushRadius={brushRadius}
@@ -120,7 +134,7 @@ const SliderPointer = styled.div``;
 const GameRound = ({gameId}) => {
   const [color, setColor] = React.useState(colors.black16);
   const [seconds, setSeconds] = React.useState(60);
-  const [image, setImage] = React.useState('');
+  const [imageUrl, setImageUrl] = React.useState('');
   const canvasRef = React.createRef();
   const fiveSecSoundTag = React.createRef();
   const gameSoundTag = React.createRef();
@@ -137,7 +151,7 @@ const GameRound = ({gameId}) => {
       .doc(playerId)
       .get()
       .then((player) => {
-        setImage(player.data().imageLink);
+        setImageUrl(player.data().imageLink);
       });
   }, [gameId]);
 
@@ -148,7 +162,7 @@ const GameRound = ({gameId}) => {
         .add({
           drawing: canvasRef.current.getSaveData(),
           playerId: playerId,
-          imageLink: image,
+          imageLink: imageUrl,
         })
         .then(() => {
           navigate(`/game/${gameId}/rating`);
@@ -167,7 +181,7 @@ const GameRound = ({gameId}) => {
       <audio ref={fiveSecSoundTag} src={FiveSecSound} />
       <TopBar text={'ROUND 1'} />
       <Timer seconds={seconds} setSeconds={setSeconds} />
-      <DrawingBoard image={image} canvasRef={canvasRef} color={color} setColor={setColor} />
+      <DrawingBoard imageUrl={imageUrl} canvasRef={canvasRef} color={color} setColor={setColor} />
       <HueContainer>
         <ColorPreview color={color} />
         <Space width={20} />

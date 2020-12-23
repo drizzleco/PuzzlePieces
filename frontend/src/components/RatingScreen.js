@@ -127,9 +127,7 @@ const Divider = styled.div`
   border-left: 6px solid ${colors.peach};
 `;
 
-const ImagePlaceholder = styled.img`
-  width: 20%;
-`;
+const ImagePlaceholder = styled.img``;
 
 const Text = styled.h1`
   font-family: Sniglet;
@@ -139,10 +137,22 @@ const Text = styled.h1`
 const RefCanvasDraw = ({drawings, currentIndex}) => {
   const drawing = drawings[currentIndex];
   const canvasRef = React.useRef();
+  const drawingData = JSON.parse(drawing);
+  const height = drawingData.height;
+  const width = drawingData.width;
   React.useEffect(() => {
     canvasRef.current.loadSaveData(drawing, true);
-  }, [drawing]);
-  return <CanvasDraw ref={canvasRef} disabled hideInterface hideGrid />;
+  });
+  return (
+    <CanvasDraw
+      ref={canvasRef}
+      canvasHeight={height}
+      canvasWidth={width}
+      disabled
+      hideInterface
+      hideGrid
+    />
+  );
 };
 
 const RatingScreen = () => {
