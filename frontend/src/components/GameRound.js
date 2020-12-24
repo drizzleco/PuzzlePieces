@@ -185,7 +185,7 @@ const GameRound = ({gameId}) => {
   return (
     <Wrapper>
       <TransitionScreen
-        visible={showTransition}
+        isVisible={showTransition}
         text={'Time to show off - replicate the left image!'}
       />
       <audio autoPlay loop ref={gameSoundTag} src={GameSound} />

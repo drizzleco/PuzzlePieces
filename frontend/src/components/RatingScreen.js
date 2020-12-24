@@ -212,7 +212,10 @@ const RatingScreen = () => {
 
   return (
     <Wrapper>
-      <TransitionScreen visible={showTransition} text={'Stir UP that drama - it’s judging time'} />
+      <TransitionScreen
+        isVisible={showTransition}
+        text={'Stir UP that drama - it’s judging time'}
+      />
       <audio autoPlay loop src={RatingsSound} />
       <TopBar text={'Rate the drawings'} color={colors.orange1} />
       <Row>

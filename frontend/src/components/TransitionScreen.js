@@ -44,8 +44,8 @@ const Text = styled.h1`
   font-family: Sniglet;
 `;
 
-const TransitionScreen = ({visible, text}) => {
-  if (visible) {
+const TransitionScreen = ({isVisible, text}) => {
+  if (isVisible) {
     return (
       <Wrapper>
         <Background>

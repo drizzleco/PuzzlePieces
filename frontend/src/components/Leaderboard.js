@@ -255,7 +255,7 @@ const LeaderBoard = ({gameId}) => {
 
   return (
     <Wrapper>
-      <TransitionScreen visible={showTransition} text={'Ready to see y’all’s creation?'} />
+      <TransitionScreen isVisible={showTransition} text={'Ready to see y’all’s creation?'} />
       <audio autoPlay loop src={LeaderboardSound} />
       <TopBar color={colors.orange1}>
         <Logo src={logo}></Logo>
