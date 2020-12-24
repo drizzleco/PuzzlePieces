@@ -38,17 +38,19 @@ const format = (seconds) => {
   return mins + ':' + (secs < 10 ? '0' + secs : secs);
 };
 
-const Timer = ({seconds, setSeconds}) => {
+const Timer = ({seconds, setSeconds, startTimer}) => {
   React.useEffect(() => {
     let interval = null;
-    interval = setInterval(() => {
-      setSeconds((seconds) => seconds - 1);
-    }, 1000);
+    if (startTimer) {
+      interval = setInterval(() => {
+        setSeconds((seconds) => seconds - 1);
+      }, 1000);
+    }
     if (seconds === 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [seconds, setSeconds]);
+  }, [seconds, setSeconds, startTimer]);
 
   return (
     <TimerDiv>

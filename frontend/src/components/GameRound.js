@@ -10,6 +10,7 @@ import {faUndoAlt, faEraser} from '@fortawesome/free-solid-svg-icons';
 import dbh from '../firebase.js';
 import {navigate} from '@reach/router';
 import TopBar from './TopBar';
+import TransitionScreen from './TransitionScreen';
 import GameSound from '../assets/sounds/game.wav';
 import FiveSecSound from '../assets/sounds/fivesec.wav';
 import Timer from './Timer';
@@ -132,6 +133,8 @@ const ColorPreview = styled.div`
 const SliderPointer = styled.div``;
 
 const GameRound = ({gameId}) => {
+  const [showTransition, setShowTransition] = React.useState(true);
+  const [startTimer, setStartTimer] = React.useState(false);
   const [color, setColor] = React.useState(colors.black16);
   const [seconds, setSeconds] = React.useState(60);
   const [imageUrl, setImageUrl] = React.useState('');
@@ -153,6 +156,10 @@ const GameRound = ({gameId}) => {
       .then((player) => {
         setImageUrl(player.data().imageLink);
       });
+    setTimeout(() => {
+      setShowTransition(false);
+      setStartTimer(true);
+    }, 2000);
   }, [gameId]);
 
   React.useEffect(() => {
@@ -177,10 +184,14 @@ const GameRound = ({gameId}) => {
 
   return (
     <Wrapper>
+      <TransitionScreen
+        isVisible={showTransition}
+        text={'Time to show off - replicate the left image!'}
+      />
       <audio autoPlay loop ref={gameSoundTag} src={GameSound} />
       <audio ref={fiveSecSoundTag} src={FiveSecSound} />
       <TopBar text={'ROUND 1'} />
-      <Timer seconds={seconds} setSeconds={setSeconds} />
+      <Timer seconds={seconds} setSeconds={setSeconds} startTimer={startTimer} />
       <DrawingBoard imageUrl={imageUrl} canvasRef={canvasRef} color={color} setColor={setColor} />
       <HueContainer>
         <ColorPreview color={color} />

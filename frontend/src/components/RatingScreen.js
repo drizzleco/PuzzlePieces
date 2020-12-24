@@ -12,6 +12,7 @@ import CanvasDraw from 'react-canvas-draw';
 import {useCookies} from 'react-cookie';
 import RatingsSound from '../assets/sounds/ratings.mp3';
 import Timer from './Timer';
+import TransitionScreen from './TransitionScreen';
 
 const NavButton = styled(Button)`
   border: 4px solid ${colors.purple3};
@@ -145,6 +146,7 @@ const RefCanvasDraw = ({drawings, currentIndex}) => {
   });
   return (
     <CanvasDraw
+      style={{zIndex: 0}}
       ref={canvasRef}
       canvasHeight={height}
       canvasWidth={width}
@@ -157,6 +159,8 @@ const RefCanvasDraw = ({drawings, currentIndex}) => {
 
 const RatingScreen = () => {
   const {gameId} = useParams();
+  const [showTransition, setShowTransition] = React.useState(true);
+  const [startTimer, setStartTimer] = React.useState(false);
   const [cookies] = useCookies(['drawmaPlayerId']);
   const [drawings, setDrawings] = React.useState([]);
   const [originalImageLinks, setOriginalImageLinks] = React.useState([]);
@@ -185,6 +189,10 @@ const RatingScreen = () => {
           indexToDocId[index] = doc.id;
           index += 1;
         });
+        setTimeout(() => {
+          setShowTransition(false);
+          setStartTimer(true);
+        }, 2000);
         // doc.id upload later
         // drawing string for rendering
         // index to map from doc.id to an array
@@ -204,11 +212,15 @@ const RatingScreen = () => {
 
   return (
     <Wrapper>
+      <TransitionScreen
+        isVisible={showTransition}
+        text={'Stir UP that drama - it’s judging time'}
+      />
       <audio autoPlay loop src={RatingsSound} />
       <TopBar text={'Rate the drawings'} color={colors.orange1} />
       <Row>
         <Column>
-          <Timer seconds={seconds} setSeconds={setSeconds} />
+          <Timer seconds={seconds} setSeconds={setSeconds} startTimer={startTimer} />
           <ProgressBox>
             <ProgressBoxText>
               {currentIndex + 1} of {drawings.length}

@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, Row, Wrapper} from './style';
 import dbh from '../firebase.js';
 import TopBar from './TopBar';
+import TransitionScreen from './TransitionScreen';
 import colors from '../colors';
 import styled from 'styled-components';
 import {navigate} from '@reach/router';
@@ -153,7 +154,7 @@ const RefCanvasDraw = ({drawing}) => {
 
   return (
     <CanvasDraw
-      style={{display: 'flex'}}
+      style={{display: 'flex', zIndex: 0}}
       canvasWidth={width}
       canvasHeight={height}
       ref={canvasRef}
@@ -238,6 +239,7 @@ const LeaderBoard = ({gameId}) => {
   const gameDoc = dbh.collection('game').doc(gameId);
   const [drawingScores, setDrawingScores] = React.useState([]);
   const [bossImageLink, setBossImageLink] = React.useState('');
+  const [showTransition, setShowTransition] = React.useState(true);
 
   React.useEffect(async () => {
     const drawingScoresMaps = await getDrawingScores(gameDoc);
@@ -248,10 +250,12 @@ const LeaderBoard = ({gameId}) => {
     gameDoc.get().then((game) => {
       setBossImageLink(game.data().bossImageLink);
     });
+    setTimeout(() => setShowTransition(false), 2000);
   }, []);
 
   return (
     <Wrapper>
+      <TransitionScreen isVisible={showTransition} text={'Ready to see y’all’s creation?'} />
       <audio autoPlay loop src={LeaderboardSound} />
       <TopBar color={colors.orange1}>
         <Logo src={logo}></Logo>
@@ -285,7 +289,6 @@ const LeaderBoard = ({gameId}) => {
           <FinalImage src={bossImageLink}></FinalImage>
         </LeaderBoardContent>
         <Space width={100} />
-
         <LeaderBoardContent>
           <CombinedImage gameId={gameId} />
         </LeaderBoardContent>
