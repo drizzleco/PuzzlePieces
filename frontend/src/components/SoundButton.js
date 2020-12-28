@@ -8,8 +8,6 @@ import {Button} from './style';
 import colors from '../colors';
 
 const ButtonWrapper = styled(Button)`
-  /* position: absolute;
-  right: 1%; */
   cursor: pointer;
   background: none;
   font-size: 50px;

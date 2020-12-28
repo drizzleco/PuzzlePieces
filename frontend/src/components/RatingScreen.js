@@ -8,10 +8,10 @@ import {navigate, useParams} from '@reach/router';
 import Space from './Space';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons';
-import CanvasDraw from 'react-canvas-draw';
 import {useCookies} from 'react-cookie';
 import RatingsSound from '../assets/sounds/ratings.mp3';
 import Timer from './Timer';
+import RefCanvasDraw from './RefCanvasDraw';
 import TransitionScreen from './TransitionScreen';
 
 const NavButton = styled(Button)`
@@ -135,28 +135,6 @@ const Text = styled.h1`
   font-size: 15px;
 `;
 
-const RefCanvasDraw = ({drawings, currentIndex}) => {
-  const drawing = drawings[currentIndex];
-  const canvasRef = React.useRef();
-  const drawingData = JSON.parse(drawing);
-  const height = drawingData.height;
-  const width = drawingData.width;
-  React.useEffect(() => {
-    canvasRef.current.loadSaveData(drawing, true);
-  });
-  return (
-    <CanvasDraw
-      style={{zIndex: 0}}
-      ref={canvasRef}
-      canvasHeight={height}
-      canvasWidth={width}
-      disabled
-      hideInterface
-      hideGrid
-    />
-  );
-};
-
 const RatingScreen = () => {
   const {gameId} = useParams();
   const [showTransition, setShowTransition] = React.useState(true);
@@ -234,7 +212,7 @@ const RatingScreen = () => {
         </NavButton>
         <ImagePlaceholder src={originalImageLinks[currentIndex]} />
         <Divider />
-        {drawings.length > 0 && <RefCanvasDraw drawings={drawings} currentIndex={currentIndex} />}
+        {drawings.length > 0 && <RefCanvasDraw drawing={drawings[currentIndex]} />}
         <NavButton onClick={() => setCurrentIndex(Math.min(currentIndex + 1, drawings.length - 1))}>
           <Icon icon={faChevronRight}></Icon>
         </NavButton>

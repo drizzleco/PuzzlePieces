@@ -26,6 +26,7 @@ const GetTheAppButton = styled(Button)`
 const Logo = styled.img`
   height: 30vh;
   margin-top: -8vh;
+  margin-bottom: -8vh;
 `;
 
 const NameBubble = styled(Row)`
@@ -230,12 +231,11 @@ const Homepage = ({location}) => {
   return (
     <Wrapper>
       <TopBarDiv style={{justifyContent: 'flex-end'}}>
-        <GetTheAppButton>Get the App</GetTheAppButton>
+        {/*<GetTheAppButton>Get the App</GetTheAppButton>*/}
         <SoundButton />
       </TopBarDiv>
       <audio autoPlay loop src={HomeSound} />
       <MainColumn>
-        <AboutButton onClick={() => navigate('/about')}>About the creators</AboutButton>
         <Logo src={logo} />
         <NameBubble color={name ? color : colors.gray}>
           <NameInitial>{name ? name[0] : 'N'}</NameInitial>
@@ -248,24 +248,25 @@ const Homepage = ({location}) => {
         {nameError && (
           <ErrorMessage>you’re not allowed to ghost in, please type your name</ErrorMessage>
         )}
-        <HowToPlayButton>how to play</HowToPlayButton>
-        <PlayButton
-          onClick={() =>
-            playGame(
-              name,
-              color,
-              playerID,
-              setPlayerID,
-              cookies,
-              setCookie,
-              setNameError,
-              setGameError,
-              gameId,
-            )
-          }
-        >
-          PLAY
-        </PlayButton>
+        {gameId && (
+          <PlayButton
+            onClick={() =>
+              playGame(
+                name,
+                color,
+                playerID,
+                setPlayerID,
+                cookies,
+                setCookie,
+                setNameError,
+                setGameError,
+                gameId,
+              )
+            }
+          >
+            PLAY
+          </PlayButton>
+        )}
         {!gameId && (
           <CreateGameButton
             onClick={() =>
@@ -289,6 +290,8 @@ const Homepage = ({location}) => {
             you’re too fashionably late<br></br>game’s already begun or is no longer valid
           </ErrorMessage>
         )}
+        <AboutButton onClick={() => navigate('/about')}>About the creators</AboutButton>
+        {/* <HowToPlayButton>how to play</HowToPlayButton> */}
       </MainColumn>
     </Wrapper>
   );

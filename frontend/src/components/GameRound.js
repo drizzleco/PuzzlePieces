@@ -30,11 +30,7 @@ const DrawingContainer = styled.div`
   margin: 0px 40px;
 `;
 
-const ImageContainer = styled.img`
-  /* max-height: 400px; */
-  /* width: 100%; */
-  /* object-fit: scale-down; */
-`;
+const ImageContainer = styled.img``;
 
 const ReferenceImage = ({source}) => {
   return <ImageContainer src={source}></ImageContainer>;
