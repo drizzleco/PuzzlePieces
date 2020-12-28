@@ -151,35 +151,37 @@ const RatingScreen = () => {
   const playerId = cookies.drawmaPlayerId;
 
   React.useEffect(() => {
-    gameDoc
-      .collection('drawings')
-      .get()
-      .then((data) => {
-        let drawings = [];
-        let originalImageLinks = [];
-        let scores = {};
-        let indexToDocId = {};
-        let index = 0;
-        data.forEach((doc) => {
-          drawings.push(doc.data().drawing);
-          originalImageLinks.push(doc.data().imageLink);
-          scores[doc.id] = 0;
-          indexToDocId[index] = doc.id;
-          index += 1;
+    setTimeout(() => {
+      gameDoc
+        .collection('drawings')
+        .get()
+        .then((data) => {
+          let drawings = [];
+          let originalImageLinks = [];
+          let scores = {};
+          let indexToDocId = {};
+          let index = 0;
+          data.forEach((doc) => {
+            drawings.push(doc.data().drawing);
+            originalImageLinks.push(doc.data().imageLink);
+            scores[doc.id] = 0;
+            indexToDocId[index] = doc.id;
+            index += 1;
+          });
+          setTimeout(() => {
+            setShowTransition(false);
+            setStartTimer(true);
+          }, 3000);
+          // doc.id upload later
+          // drawing string for rendering
+          // index to map from doc.id to an array
+          setDrawings(drawings);
+          setOriginalImageLinks(originalImageLinks);
+          setIndexDocIdMap(indexToDocId);
+          setScores(scores);
+          setCurrentIndex(0);
         });
-        setTimeout(() => {
-          setShowTransition(false);
-          setStartTimer(true);
-        }, 2000);
-        // doc.id upload later
-        // drawing string for rendering
-        // index to map from doc.id to an array
-        setDrawings(drawings);
-        setOriginalImageLinks(originalImageLinks);
-        setIndexDocIdMap(indexToDocId);
-        setScores(scores);
-        setCurrentIndex(0);
-      });
+    }, 2000);
   }, []);
 
   React.useEffect(() => {

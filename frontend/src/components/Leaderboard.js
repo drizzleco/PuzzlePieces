@@ -20,9 +20,7 @@ const Logo = styled.img`
   background: radial-gradient(50% 50% at 50% 50%, #ffffff 16.52%, rgba(255, 255, 255, 0) 100%);
 `;
 
-const FinalImage = styled.img`
-  /* width: 50%; */
-`;
+const FinalImage = styled.img``;
 
 const LeaderBoardContent = styled.div`
   display: flex;
