@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {HuePicker} from 'react-color';
+import {SliderPicker} from 'react-color';
 import CanvasDraw from 'react-canvas-draw';
 import {Wrapper} from './style';
 import colors from '../colors';
@@ -128,6 +128,11 @@ const ColorPreview = styled.div`
 
 const SliderPointer = styled.div``;
 
+const SliderPickerContainer = styled.div`
+  width: 80%;
+  height: 25%;
+`;
+
 const GameRound = ({gameId}) => {
   const [showTransition, setShowTransition] = React.useState(true);
   const [startTimer, setStartTimer] = React.useState(false);
@@ -194,13 +199,13 @@ const GameRound = ({gameId}) => {
         <Space width={20} />
         <ColorPreview width={'20px'} onClick={() => setColor('#000000')} color={'#000000'} />
         <ColorPreview width={'20px'} onClick={() => setColor('#FFFFFF')} color={'#FFFFFF'} />
-        <HuePicker
-          color={color}
-          pointer={SliderPointer}
-          width={'80%'}
-          height={'25%'}
-          onChange={(color) => setColor(color.hex)}
-        />
+        <SliderPickerContainer>
+          <SliderPicker
+            color={color}
+            pointer={SliderPointer}
+            onChange={(color) => setColor(color.hex)}
+          />
+        </SliderPickerContainer>
       </HueContainer>
     </Wrapper>
   );
