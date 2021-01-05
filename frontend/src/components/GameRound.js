@@ -159,7 +159,7 @@ const GameRound = ({gameId}) => {
     setTimeout(() => {
       setShowTransition(false);
       setStartTimer(true);
-    }, 2000);
+    }, 1000);
   }, [gameId]);
 
   React.useEffect(() => {

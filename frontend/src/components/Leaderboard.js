@@ -98,14 +98,6 @@ const Stars = ({place}) => {
   );
 };
 
-const ScrollView = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  height: 1200px;
-  overflow-y: scroll;
-`;
-
 const LeaderBoardUser = ({drawingId, gameDoc, score, index}) => {
   const [username, setUsername] = React.useState();
   React.useEffect(async () => {
@@ -126,11 +118,6 @@ const LeaderBoardUser = ({drawingId, gameDoc, score, index}) => {
     </LeaderBoardRow>
   );
 };
-
-const Container = styled.div`
-  display: flex;
-  flex: 1;
-`;
 
 const CombinedImageContainer = styled.div`
   display: flex;
@@ -269,7 +256,7 @@ const LeaderBoard = ({gameId}) => {
     gameDoc.get().then((game) => {
       setBossImageLink(game.data().bossImageLink);
     });
-    setTimeout(() => setShowTransition(false), 2000);
+    setTimeout(() => setShowTransition(false), 1000);
   }, []);
 
   return (

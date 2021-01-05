@@ -176,7 +176,7 @@ const RatingScreen = () => {
           setTimeout(() => {
             setShowTransition(false);
             setStartTimer(true);
-          }, 3000);
+          }, 1000);
           // doc.id upload later
           // drawing string for rendering
           // index to map from doc.id to an array
