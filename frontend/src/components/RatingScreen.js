@@ -142,6 +142,8 @@ const RatingScreen = () => {
   const [cookies] = useCookies(['drawmaPlayerId']);
   const [drawings, setDrawings] = React.useState([]);
   const [originalImageLinks, setOriginalImageLinks] = React.useState([]);
+  const [scaledImageHeight, setScaledImageHeight] = React.useState(0);
+  const [scaledImageWidth, setScaledImageWidth] = React.useState(0);
   const [scores, setScores] = React.useState({});
   const [indexDocIdMap, setIndexDocIdMap] = React.useState({});
   const [currentIndex, setCurrentIndex] = React.useState(0);
@@ -161,6 +163,9 @@ const RatingScreen = () => {
           let scores = {};
           let indexToDocId = {};
           let index = 0;
+          let firstDrawingData = JSON.parse(data.docs[0].data().drawing);
+          setScaledImageHeight(firstDrawingData.height);
+          setScaledImageWidth(firstDrawingData.width);
           data.forEach((doc) => {
             drawings.push(doc.data().drawing);
             originalImageLinks.push(doc.data().imageLink);
@@ -212,7 +217,11 @@ const RatingScreen = () => {
         <NavButton onClick={() => setCurrentIndex(Math.max(currentIndex - 1, 0))}>
           <Icon icon={faChevronLeft}></Icon>
         </NavButton>
-        <ImagePlaceholder src={originalImageLinks[currentIndex]} />
+        <ImagePlaceholder
+          src={originalImageLinks[currentIndex]}
+          width={scaledImageWidth}
+          height={scaledImageHeight}
+        />
         <Divider />
         {drawings.length > 0 && <RefCanvasDraw drawing={drawings[currentIndex]} />}
         <NavButton onClick={() => setCurrentIndex(Math.min(currentIndex + 1, drawings.length - 1))}>

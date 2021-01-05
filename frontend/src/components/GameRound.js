@@ -16,6 +16,8 @@ import FiveSecSound from '../assets/sounds/fivesec.wav';
 import Timer from './Timer';
 import {useCookies} from 'react-cookie';
 
+const MAX_IMAGE_HEIGHT = 450;
+
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -30,11 +32,7 @@ const DrawingContainer = styled.div`
   margin: 0px 40px;
 `;
 
-const ImageContainer = styled.img``;
-
-const ReferenceImage = ({source}) => {
-  return <ImageContainer src={source}></ImageContainer>;
-};
+const ReferenceImage = styled.img``;
 
 const VerticalBar = styled.div`
   border-left: 1px solid #000;
@@ -71,9 +69,10 @@ const DrawingBoard = ({imageUrl, color, setColor, canvasRef}) => {
   React.useEffect(() => {
     let image = new Image();
     image.src = imageUrl;
-    image.onload = function () {
-      setWidth(image.width);
-      setHeight(image.height);
+    image.onload = () => {
+      let ratio = MAX_IMAGE_HEIGHT / image.height;
+      setWidth(image.width * ratio);
+      setHeight(image.height * ratio);
     };
   }, [imageUrl]);
 
@@ -84,7 +83,7 @@ const DrawingBoard = ({imageUrl, color, setColor, canvasRef}) => {
   return (
     <DrawingContainer>
       <Container style={{flex: 1}}>
-        <ReferenceImage source={imageUrl} />
+        <ReferenceImage src={imageUrl} width={width} height={height} />
       </Container>
       <Space width={40} />
       <VerticalBar />

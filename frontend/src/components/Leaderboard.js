@@ -20,7 +20,7 @@ const Logo = styled.img`
   background: radial-gradient(50% 50% at 50% 50%, #ffffff 16.52%, rgba(255, 255, 255, 0) 100%);
 `;
 
-const Image = styled.img``;
+const ImageContainer = styled.img``;
 
 const LeaderBoardContent = styled.div`
   display: flex;
@@ -140,11 +140,8 @@ const CombinedImageContainer = styled.div`
   height: 100%;
 `;
 
-const RefCanvasDraw = ({drawing}) => {
+const RefCanvasDraw = ({drawing, width, height}) => {
   const canvasRef = React.useRef();
-  const drawingData = JSON.parse(drawing);
-  const height = drawingData.height;
-  const width = drawingData.width;
 
   React.useEffect(() => {
     canvasRef.current.loadSaveData(drawing, true);
@@ -163,11 +160,22 @@ const RefCanvasDraw = ({drawing}) => {
   );
 };
 
+const setImageDimensions = (source, setWidth, setHeight) => {
+  let image = new Image();
+  image.src = source;
+  image.onload = () => {
+    setWidth(image.width);
+    setHeight(image.height);
+  };
+};
+
 const CombinedImage = ({gameId}) => {
   const [drawings, setDrawings] = React.useState(null);
   const [rows, setRows] = React.useState(null);
   const [columns, setColumns] = React.useState(null);
   const [originalImageLink, setOriginalImageLink] = React.useState('');
+  const [originalImageHeight, setOriginalImageHeight] = React.useState(0);
+  const [originalImageWidth, setOriginalImageWidth] = React.useState(0);
 
   const gameDoc = dbh.collection('game').doc(gameId);
   const drawingsCollection = dbh.collection('game').doc(gameId).collection('drawings');
@@ -184,6 +192,7 @@ const CombinedImage = ({gameId}) => {
     drawingsCollection.get().then((drawings) => {
       let tempDrawings = {};
       let originalImageLink = drawings.docs[0].data().imageLink;
+      setImageDimensions(originalImageLink, setOriginalImageWidth, setOriginalImageHeight);
       setOriginalImageLink(originalImageLink.split('/').slice(0, -1).join('/'));
       drawings.forEach((drawing) => {
         let drawingData = drawing.data();
@@ -207,9 +216,15 @@ const CombinedImage = ({gameId}) => {
             {[...Array(columns)].map((colVal, colIndex) => {
               let index = rowIndex * columns + colIndex;
               if (drawings[index]) {
-                return <RefCanvasDraw drawing={drawings[index]} />;
+                return (
+                  <RefCanvasDraw
+                    drawing={drawings[index]}
+                    width={originalImageWidth}
+                    height={originalImageHeight}
+                  />
+                );
               } else {
-                return <Image src={`${originalImageLink}/${index}.png`} />;
+                return <ImageContainer src={`${originalImageLink}/${index}.png`} />;
               }
             })}
           </Row>
@@ -290,7 +305,7 @@ const LeaderBoard = ({gameId}) => {
       <Space height={10} />
       <Row>
         <LeaderBoardContent>
-          <Image src={bossImageLink}></Image>
+          <ImageContainer src={bossImageLink}></ImageContainer>
         </LeaderBoardContent>
         <Space width={100} />
         <LeaderBoardContent>
