@@ -190,7 +190,7 @@ const GameRound = ({gameId}) => {
       />
       <audio autoPlay loop ref={gameSoundTag} src={GameSound} />
       <audio ref={fiveSecSoundTag} src={FiveSecSound} />
-      <TopBar text={'ROUND 1'} />
+      <TopBar />
       <Timer seconds={seconds} setSeconds={setSeconds} startTimer={startTimer} />
       <DrawingBoard imageUrl={imageUrl} canvasRef={canvasRef} color={color} setColor={setColor} />
       <HueContainer>
