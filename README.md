@@ -69,3 +69,16 @@ In `backend` folder,
 ## Backend
 
 - Flask
+
+---
+
+# Image Credits
+
+Thank you to...
+
+- https://homepages.cae.wisc.edu/~ece533/images/
+- <a href="https://freeimages.com/photographer/jadegreen-43952">Steven Ritts</a>
+- <a href="https://unsplash.com/@_yashrjain?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Yash Jain</a>
+- <a href="https://unsplash.com/@nate_dumlao?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Nathan Dumlao</a>
+- <a href="https://freeimages.com/photographer/icon0-79981">icon0</a>
+- <a href="https://freeimages.com/photographer/merve-44914">merve toprak</a>

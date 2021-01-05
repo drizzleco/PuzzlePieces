@@ -28,4 +28,9 @@ FILEPATH_NAMES = {
     "cat": "cat.png",
     "peppers": "peppers.png",
     "pool": "pool.png",
+    "arch": "arch.jpg",
+    "pattern": "pattern.jpg",
+    "building": "building.jpg",
+    "leaves": "leaves.jpg",
+    "flower": "flower.jpg",
 }
