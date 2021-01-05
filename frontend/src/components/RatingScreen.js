@@ -166,6 +166,7 @@ const RatingScreen = () => {
           let firstDrawingData = JSON.parse(data.docs[0].data().drawing);
           setScaledImageHeight(firstDrawingData.height);
           setScaledImageWidth(firstDrawingData.width);
+          setSeconds(Math.min(data.size * 3, 30)); // user gets 3 sec per drawing
           data.forEach((doc) => {
             drawings.push(doc.data().drawing);
             originalImageLinks.push(doc.data().imageLink);
