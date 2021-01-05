@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import {HuePicker} from 'react-color';
+import {SliderPicker} from 'react-color';
 import CanvasDraw from 'react-canvas-draw';
 import {Wrapper} from './style';
 import colors from '../colors';
@@ -16,6 +16,8 @@ import FiveSecSound from '../assets/sounds/fivesec.wav';
 import Timer from './Timer';
 import {useCookies} from 'react-cookie';
 
+const MAX_IMAGE_HEIGHT = 450;
+
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -30,11 +32,7 @@ const DrawingContainer = styled.div`
   margin: 0px 40px;
 `;
 
-const ImageContainer = styled.img``;
-
-const ReferenceImage = ({source}) => {
-  return <ImageContainer src={source}></ImageContainer>;
-};
+const ReferenceImage = styled.img``;
 
 const VerticalBar = styled.div`
   border-left: 1px solid #000;
@@ -71,9 +69,10 @@ const DrawingBoard = ({imageUrl, color, setColor, canvasRef}) => {
   React.useEffect(() => {
     let image = new Image();
     image.src = imageUrl;
-    image.onload = function () {
-      setWidth(image.width);
-      setHeight(image.height);
+    image.onload = () => {
+      let ratio = MAX_IMAGE_HEIGHT / image.height;
+      setWidth(image.width * ratio);
+      setHeight(image.height * ratio);
     };
   }, [imageUrl]);
 
@@ -84,7 +83,7 @@ const DrawingBoard = ({imageUrl, color, setColor, canvasRef}) => {
   return (
     <DrawingContainer>
       <Container style={{flex: 1}}>
-        <ReferenceImage source={imageUrl} />
+        <ReferenceImage src={imageUrl} width={width} height={height} />
       </Container>
       <Space width={40} />
       <VerticalBar />
@@ -128,6 +127,11 @@ const ColorPreview = styled.div`
 
 const SliderPointer = styled.div``;
 
+const SliderPickerContainer = styled.div`
+  width: 80%;
+  height: 25%;
+`;
+
 const GameRound = ({gameId}) => {
   const [showTransition, setShowTransition] = React.useState(true);
   const [startTimer, setStartTimer] = React.useState(false);
@@ -155,7 +159,7 @@ const GameRound = ({gameId}) => {
     setTimeout(() => {
       setShowTransition(false);
       setStartTimer(true);
-    }, 2000);
+    }, 1000);
   }, [gameId]);
 
   React.useEffect(() => {
@@ -186,7 +190,7 @@ const GameRound = ({gameId}) => {
       />
       <audio autoPlay loop ref={gameSoundTag} src={GameSound} />
       <audio ref={fiveSecSoundTag} src={FiveSecSound} />
-      <TopBar text={'ROUND 1'} />
+      <TopBar />
       <Timer seconds={seconds} setSeconds={setSeconds} startTimer={startTimer} />
       <DrawingBoard imageUrl={imageUrl} canvasRef={canvasRef} color={color} setColor={setColor} />
       <HueContainer>
@@ -194,13 +198,13 @@ const GameRound = ({gameId}) => {
         <Space width={20} />
         <ColorPreview width={'20px'} onClick={() => setColor('#000000')} color={'#000000'} />
         <ColorPreview width={'20px'} onClick={() => setColor('#FFFFFF')} color={'#FFFFFF'} />
-        <HuePicker
-          color={color}
-          pointer={SliderPointer}
-          width={'80%'}
-          height={'25%'}
-          onChange={(color) => setColor(color.hex)}
-        />
+        <SliderPickerContainer>
+          <SliderPicker
+            color={color}
+            pointer={SliderPointer}
+            onChange={(color) => setColor(color.hex)}
+          />
+        </SliderPickerContainer>
       </HueContainer>
     </Wrapper>
   );

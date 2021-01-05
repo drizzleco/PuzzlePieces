@@ -132,7 +132,11 @@ const CreateGame = () => {
             value={seconds}
             setValue={setSeconds}
           />
-          <SelectionButtons buttonValues={[2, 4, 6, 8]} value={players} setValue={setPlayers} />
+          <SelectionButtons
+            buttonValues={[2, 3, 4, 5, 6, 7, 8]}
+            value={players}
+            setValue={setPlayers}
+          />
         </SelectionColumn>
       </Row>
       <Row style={{flex: 2}}>
