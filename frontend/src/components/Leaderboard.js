@@ -20,7 +20,7 @@ const Logo = styled.img`
   background: radial-gradient(50% 50% at 50% 50%, #ffffff 16.52%, rgba(255, 255, 255, 0) 100%);
 `;
 
-const FinalImage = styled.img``;
+const Image = styled.img``;
 
 const LeaderBoardContent = styled.div`
   display: flex;
@@ -167,7 +167,7 @@ const CombinedImage = ({gameId}) => {
   const [drawings, setDrawings] = React.useState(null);
   const [rows, setRows] = React.useState(null);
   const [columns, setColumns] = React.useState(null);
-  // const numCanvases = rows * columns;
+  const [originalImageLink, setOriginalImageLink] = React.useState('');
 
   const gameDoc = dbh.collection('game').doc(gameId);
   const drawingsCollection = dbh.collection('game').doc(gameId).collection('drawings');
@@ -183,6 +183,8 @@ const CombinedImage = ({gameId}) => {
   React.useEffect(() => {
     drawingsCollection.get().then((drawings) => {
       let tempDrawings = {};
+      let originalImageLink = drawings.docs[0].data().imageLink;
+      setOriginalImageLink(originalImageLink.split('/').slice(0, -1).join('/'));
       drawings.forEach((drawing) => {
         let drawingData = drawing.data();
         let splits = drawingData.imageLink.split('/');
@@ -204,7 +206,11 @@ const CombinedImage = ({gameId}) => {
           <Row style={{height: '100%'}}>
             {[...Array(columns)].map((colVal, colIndex) => {
               let index = rowIndex * columns + colIndex;
-              return <RefCanvasDraw drawing={drawings[index]} />;
+              if (drawings[index]) {
+                return <RefCanvasDraw drawing={drawings[index]} />;
+              } else {
+                return <Image src={`${originalImageLink}/${index}.png`} />;
+              }
             })}
           </Row>
         );
@@ -284,7 +290,7 @@ const LeaderBoard = ({gameId}) => {
       <Space height={10} />
       <Row>
         <LeaderBoardContent>
-          <FinalImage src={bossImageLink}></FinalImage>
+          <Image src={bossImageLink}></Image>
         </LeaderBoardContent>
         <Space width={100} />
         <LeaderBoardContent>
