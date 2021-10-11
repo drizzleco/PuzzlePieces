@@ -176,7 +176,7 @@ const RatingScreen = () => {
           });
           setTimeout(() => {
             setShowTransition(false);
-            setSeconds(Math.max(index * 5, 40));
+            setSeconds(Math.min(index * 5, 40));
             setStartTimer(true);
           }, 1000);
           // doc.id upload later

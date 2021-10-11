@@ -36,6 +36,8 @@ BUCKET_BASE_URL = "https://storage.googleapis.com/puzzlepieces-25386.appspot.com
 #    "flower": "flower.jpg",
 #}
 FILEPATH_NAMES = {
-    "children-toys": "children-toys.jpg",
-    "baby-pattern": "baby-pattern.jpg",
+    "children-toys": "children-toys.png",
+    "baby-pattern": "baby-pattern.png",
+    "fruit": "fruit.png",
+    "night": "night.png",
 }
