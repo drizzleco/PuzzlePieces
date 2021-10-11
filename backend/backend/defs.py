@@ -22,15 +22,20 @@ CREDENTIALS = credentials.Certificate(
 
 BUCKET_BASE_URL = "https://storage.googleapis.com/puzzlepieces-25386.appspot.com"
 
+# Force other pics for now
+#FILEPATH_NAMES = {
+#    "airplane": "airplane.png",
+#    "baboon": "baboon.png",
+#    "cat": "cat.png",
+#    "peppers": "peppers.png",
+#    "pool": "pool.png",
+#    "arch": "arch.jpg",
+#    "pattern": "pattern.jpg",
+#    "building": "building.jpg",
+#    "leaves": "leaves.jpg",
+#    "flower": "flower.jpg",
+#}
 FILEPATH_NAMES = {
-    "airplane": "airplane.png",
-    "baboon": "baboon.png",
-    "cat": "cat.png",
-    "peppers": "peppers.png",
-    "pool": "pool.png",
-    "arch": "arch.jpg",
-    "pattern": "pattern.jpg",
-    "building": "building.jpg",
-    "leaves": "leaves.jpg",
-    "flower": "flower.jpg",
+    "children-toys": "children-toys.jpg",
+    "baby-pattern": "baby-pattern.jpg",
 }
