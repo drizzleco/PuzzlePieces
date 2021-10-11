@@ -17,6 +17,7 @@ const Label = styled.h1`
 `;
 
 const SelectionButton = styled(Button)`
+  margin-right: 20px;
   background: ${(props) => (props.selected ? colors.orange1 : colors.white16)};
   border-radius: 4px;
   font-size: 20px;
@@ -38,7 +39,6 @@ const SelectionButtons = ({buttonValues, value, setValue}) => {
             <SelectionButton key={num} onClick={() => handleClick(num)} selected={num === value}>
               {num}
             </SelectionButton>
-            <Space width={20} />
           </>
         );
       })}
@@ -58,6 +58,8 @@ const SelectionColumn = styled(LabelColumn)`
 
 const SelectionRow = styled(Row)`
   justify-content: flex-start;
+  width: 500px;
+  overflow: auto;
 `;
 
 const CancelButton = styled(Button)`
@@ -133,7 +135,7 @@ const CreateGame = () => {
             setValue={setSeconds}
           />
           <SelectionButtons
-            buttonValues={[2, 3, 4, 5, 6, 7, 8]}
+            buttonValues={[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]}
             value={players}
             setValue={setPlayers}
           />
