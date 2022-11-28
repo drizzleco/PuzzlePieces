@@ -11,7 +11,7 @@ CREDENTIALS = credentials.Certificate(
         "project_id": "puzzlepieces-25386",
         "private_key_id": os.getenv("RENDER_FIREBASE_PRIVATE_KEY_ID"),
         "private_key": os.getenv("RENDER_FIREBASE_PRIVATE_KEY"),
-        "client_email": os.getenv("RENDER_FIREBASE_CLIENT_EMAIL"),
+        "client_email": os.getenv("RENDER_FIREBASE_CLIENT_EMAIL").replace('\\n','\n'),
         "client_id": os.getenv("RENDER_FIREBASE_CLIENT_ID"),
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
         "token_uri": "https://oauth2.googleapis.com/token",
