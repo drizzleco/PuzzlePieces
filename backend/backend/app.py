@@ -4,13 +4,14 @@ import random
 import firebase_admin
 from firebase_admin import firestore, storage
 from flask import Flask, request
+from flask_cors import CORS
 from image_slicer import calc_columns_rows
 
 from backend.defs import BUCKET_BASE_URL, CREDENTIALS, FILEPATH_NAMES
 from backend.utils import slice_images
 
 app = Flask(__name__)
-
+CORS(app, resources=r"/*", origins=["http://localhost:3000", "https://puzzlepieces.onrender.com"])
 
 firebase_app = firebase_admin.initialize_app(
     CREDENTIALS, options={"storageBucket": "puzzlepieces-25386.appspot.com"},
