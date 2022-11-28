@@ -1,6 +1,4 @@
-# syntax = docker/dockerfile:1.2
 FROM python:3.8
-RUN --mount=type=secret,id=firebase,dst=/etc/secrets/firebase
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
